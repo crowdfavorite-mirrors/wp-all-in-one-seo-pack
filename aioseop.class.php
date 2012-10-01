@@ -2,7 +2,7 @@
 
 class All_in_One_SEO_Pack {
 	
- 	var $version = "1.6.15";
+ 	var $version = "1.6.15.2";
  	
  	/** Max numbers of chars in auto-generated description */
  	var $maximum_description_length = 160;
@@ -345,7 +345,7 @@ class All_in_One_SEO_Pack {
 			$home_meta = stripcslashes($aioseop_options['aiosp_home_meta_tags']);
 			$front_meta = stripcslashes($aioseop_options['aiosp_front_meta_tags']);
 			
-			if ( is_page() && isset($page_meta) && !empty( $page_meta ) && !$is_front_page ) {
+			if ( is_page() && isset( $page_meta ) && !empty( $page_meta ) && ( !$is_front_page || empty( $front_meta ) ) ) {
 				if ( isset( $meta_string ) ) $meta_string .= "\n";
 				$meta_string .= $page_meta;
 			}
