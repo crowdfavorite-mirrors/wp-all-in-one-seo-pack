@@ -216,16 +216,10 @@ if ( !class_exists( 'All_in_One_SEO_Pack_Performance' ) ) {
 					}
 				}
 
-			do if ( !empty( $_REQUEST['sfwd_debug_submit'] ) || !empty( $_REQUEST['sfwd_update_check'] ) ) {
+			do if ( !empty( $_REQUEST['sfwd_debug_submit'] ) ) {
 				$nonce=$_REQUEST['sfwd_debug_nonce'];
 				if (! wp_verify_nonce($nonce, 'sfwd-debug-nonce') ) {
 					echo "<div class='sfwd_debug_error'>" . __( "Form submission error: verification check failed.", 'all_in_one_seo_pack' ) . "</div>";
-					break;
-				}
-				if ( $_REQUEST['sfwd_update_check'] ) {
-					global $aioseop_update_checker;
-					$aioseop_update_checker->checkForUpdates();
-					echo "<div class='sfwd_debug_mail_sent'>" . sprintf( __( "%s has checked for updates.", 'all_in_one_seo_pack' ), AIOSEOP_PLUGIN_NAME ) . "</div>";
 					break;
 				}
 				if ($_REQUEST['sfwd_debug_send_email']) {
@@ -241,7 +235,7 @@ if ( !class_exists( 'All_in_One_SEO_Pack_Performance' ) ) {
 			$nonce = wp_create_nonce('sfwd-debug-nonce');
 			$buf =	"<ul class='sfwd_debug_settings'>\n{$page_text}\n</ul>\n<p>\n" .
 					'<input name="sfwd_debug_send_email" type="text" value="" placeholder="' . __( "E-mail debug information", 'all_in_one_seo_pack' ) . '"><input name="sfwd_debug_nonce" type="hidden" value="' .
-					$nonce . '"><input name="sfwd_debug_submit" type="submit" value="' . __( 'Submit', 'all_in_one_seo_pack' ) . '" class="button-primary"><p><input name="sfwd_update_check" type="submit" value="' . __( 'Check For Updates', 'all_in_one_seo_pack' ) . '" class="button-primary">';
+					$nonce . '"><input name="sfwd_debug_submit" type="submit" value="' . __( 'Submit', 'all_in_one_seo_pack' ) . '" class="button-primary"><p>';
 			return $buf;
 		}
 	}
