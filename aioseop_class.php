@@ -760,7 +760,9 @@ class All_in_One_SEO_Pack extends All_in_One_SEO_Pack_Module {
 
 	function get_current_options( $opts = Array(), $location = null, $defaults = null, $post = null ) {
 		if ( ( $location === 'aiosp' ) && ( $this->locations[$location]['type'] == 'metabox' ) ) {
-			global $post;
+			if ( $post == null ) {
+				global $post;
+			}
 			$post_id = $post;
 			if ( is_object( $post_id ) )
 				$post_id = $post_id->ID;
@@ -1250,8 +1252,17 @@ class All_in_One_SEO_Pack extends All_in_One_SEO_Pack_Module {
 				$page = $this->get_page_number();
 				if ( $page > 1 )
 					$prev = get_previous_posts_page_link();
-				if ( $page < $max_page )
-					$next = get_next_posts_page_link( $max_page );
+				if ( $page < $max_page ) {
+//					$next = get_next_posts_page_link( $max_page );
+					$paged = $GLOBALS['paged'];
+					if ( !is_single() ) {
+						if ( !$paged )
+							$paged = 1;
+						$nextpage = intval($paged) + 1;
+						if ( !$max_page || $max_page >= $nextpage )
+							$next = get_pagenum_link($nextpage);
+					}
+				}
 			} else if ( is_page() || is_single() ) {
 				$numpages = 1;
 		        $multipage = 0;
@@ -1305,6 +1316,7 @@ class All_in_One_SEO_Pack extends All_in_One_SEO_Pack_Module {
 
 function aiosp_google_analytics() {
 	global $aioseop_options;
+	ob_start();
 	?>
 		<script type="text/javascript">
 
@@ -1372,6 +1384,8 @@ function aiosp_google_analytics() {
 		</script>
 <?php
 	}
+	$analytics = ob_get_clean();
+	echo apply_filters( 'aiosp_google_analytics', $analytics );
 }
 	
 // Thank you, Yoast de Valk, for much of this code.	
@@ -1530,13 +1544,8 @@ function aiosp_google_analytics() {
 		$this->title_start = $start;
 		$this->title_end = $end;
 		$this->orig_title = $title;
-
-		if ( $start && $end )
-			$header = $this->substr( $content, 0, $start + $len_start ) . $title .  $this->substr( $content, $end );
-		else
-			$header = $content;
 		
-		return $header;
+		return preg_replace( '/<title>(.*?)<\/title>/is', "<title>{$title}</title>", $content );
 	}
 	
 	function internationalize( $in ) {
@@ -1717,7 +1726,6 @@ function aiosp_google_analytics() {
 		} else if ( is_page() || $this->is_static_posts_page() || ( is_home() && !$this->is_static_posts_page() ) ) {
 			if ( $post === null ) return false;
 			// we're not in the loop :(
-			$authordata = get_userdata( $post->post_author );
 			if ( ( $this->is_static_front_page() ) && ( $home_title = $this->internationalize( $aioseop_options['aiosp_home_title'] ) ) ) {
 				//home title filter
 				return apply_filters( 'aioseop_home_page_title', $home_title );
@@ -1749,7 +1757,6 @@ function aiosp_google_analytics() {
 		} else if ( is_single() ) {
 			// we're not in the loop :(
 			if ( $post === null ) return false;
-			$authordata = get_userdata( $post->post_author );
 			$categories = get_the_category();
 			$category = '';
 			if ( count( $categories ) > 0 ) {

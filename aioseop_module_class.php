@@ -914,9 +914,13 @@ if ( !class_exists( 'All_in_One_SEO_Pack_Module' ) ) {
 					foreach ( $option as $v => $subopt ) {
 						$sel = '';
 						$is_arr = is_array( $value );
-						if ( is_string( $v ) || is_string( $value ) )
-							@$cmp = !strcmp( (string)$v, (string)$value );
-						else
+						if ( is_string( $v ) || is_string( $value ) ) {
+							if ( is_string( $value ) )
+								$cmp = !strcmp( $v, $value );
+							else
+								$cmp = !strcmp( $v, "" );
+						//	$cmp = !strcmp( (string)$v, (string)$value );						
+						} else
 							$cmp = ( $value == $v );
 						if ( ( !$is_arr && $cmp ) || ( $is_arr && in_array( $v, $value ) ) )
 							$sel = $setsel;
