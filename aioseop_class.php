@@ -966,12 +966,6 @@ class All_in_One_SEO_Pack extends All_in_One_SEO_Pack_Module {
 				</div>
 		        <?php
 		        break;
-			case "aioseop-hosting":
-	        ?><div class="aioseop_metabox_text">
-	        	<p><a href="http://secure.hostgator.com/~affiliat/cgi-bin/affiliates/clickthru.cgi?id=aioseo&page=http://www.hostgator.com/apps/wordpress-hosting.shtml" target="_blank"><img src="<?php echo AIOSEOP_PLUGIN_URL; ?>images/Hostgator--AN-9-8-2013-445x220.gif" alt="HostGator.com WordPress Hosting | Use Coupon WPPlugin | Only $3.47/Month"></p>
-			</div>
-	        <?php
-				break;
 		}
 		echo "</div>";
 	}
@@ -2607,7 +2601,6 @@ function aiosp_google_analytics() {
 		
 		add_meta_box('aioseop-list', __( "Join Our Mailing List", 'all_in_one_seo_pack' ), array( $this, 'display_extra_metaboxes'), 'aioseop_metaboxes', 'normal', 'core');
 		add_meta_box('aioseop-about', "About <span style='float:right;'>Version <b>" . AIOSEOP_VERSION . "</b></span>", array( $this, 'display_extra_metaboxes'), 'aioseop_metaboxes', 'side', 'core');
-//		add_meta_box('aioseop-hosting', __( "Recommended WordPress Hosting", 'all_in_one_seo_pack' ), array( $this, 'display_extra_metaboxes'), 'aioseop_metaboxes', 'side', 'core');
 		
 		add_action( 'aioseop_modules_add_menus', Array( $this, 'add_menu' ), 5 );
 		do_action( 'aioseop_modules_add_menus', $file );
@@ -2721,11 +2714,10 @@ function aiosp_google_analytics() {
 					// postboxes setup
 					if ( typeof postboxes !== 'undefined' )
 						postboxes.add_postbox_toggles('<?php echo $this->pagehook; ?>');
-					$('.meta-box-sortables').removeClass('meta-box-sortables');
+					// $('.meta-box-sortables').removeClass('meta-box-sortables');
 				});
 				//]]>
 			</script>
-		<a href="http://open.ecwid.com/l8dt" target="_blank" style="margin-bottom: 15px;display: block;"><img src="<?php echo AIOSEOP_PLUGIN_IMAGES_URL; ?>ecwid_banner.png"></a>
 		<!-- Headway Themes-->
 		<div class="aioseop_advert">
 					<div>
