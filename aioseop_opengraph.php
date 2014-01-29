@@ -324,7 +324,7 @@ if ( !class_exists( 'All_in_One_SEO_Pack_Opengraph' ) ) {
 				if( empty($sitename) ) $sitename = get_bloginfo('name');
 				
 				if ( empty( $description ) && $first_page && ( !empty( $this->options['aiosp_opengraph_generate_descriptions'] ) ) )
-					$description = $aiosp->trim_excerpt_without_filters( $aiosp->internationalize( $post->post_content ), 1000 );
+					$description = $aiosp->trim_excerpt_without_filters( $aiosp->internationalize( preg_replace( '/\s+/', ' ', $post->post_content ) ), 1000 );
 				
 				if ( empty($description) && $first_page ) $description = get_bloginfo('description');
 			
@@ -356,7 +356,7 @@ if ( !class_exists( 'All_in_One_SEO_Pack_Opengraph' ) ) {
 			} else return;
 			
 			if ( !empty( $description ) )
-				$description = $aiosp->trim_excerpt_without_filters( $aiosp->internationalize( $description ), 1000 );
+				$description = $aiosp->trim_excerpt_without_filters( $aiosp->internationalize( preg_replace( '/\s+/', ' ', $post->post_content ) ), 1000 );
 			
 			/* Data Validation */
 			$title = strip_tags( esc_attr( $title ) );

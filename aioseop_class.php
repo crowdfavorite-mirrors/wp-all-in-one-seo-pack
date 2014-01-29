@@ -1725,7 +1725,7 @@ function aiosp_google_analytics() {
 		<script type="text/javascript">
 		function recordOutboundLink(link, category, action) {
 		<?php if ( !empty( $aioseop_options['aiosp_ga_use_universal_analytics'] ) ) { ?>
-			ga(category, action);
+			ga('send', 'event', category, action);
 		<?php }
 		 	  if ( empty( $aioseop_options['aiosp_ga_use_universal_analytics'] ) ) {	?>
 			_gat._getTrackerByName()._trackEvent(category, action);
