@@ -6,11 +6,11 @@ Requires at least: 3.3
 Tested up to: 3.8.1
 Stable tag: trunk
 
-All in One SEO Pack is a WordPress SEO plugin to automatically optimize your Wordpress blog for Search Engines such as Google.
+All in One SEO Pack is a WordPress SEO plugin to automatically optimize your WordPress blog for Search Engines such as Google.
 
 == Description ==
 
-All in One SEO Pack **Optimizes** your Wordpress blog for SEO (**Search Engine Optimization**).
+All in One SEO Pack **Optimizes** your WordPress blog for SEO (**Search Engine Optimization**).
 
 **[Upgrade to Pro Version](http://semperplugins.com/plugins/all-in-one-seo-pack-pro-version/)**
 
