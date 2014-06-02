@@ -173,6 +173,7 @@ class All_in_One_SEO_Pack extends All_in_One_SEO_Pack_Module {
 			"ga_use_universal_analytics" => __( "Use the new Universal Analytics tracking code for Google Analytics; do this for new analytics accounts.", 'all_in_one_seo_pack' ),
 			"ga_domain"				=> __( "Enter your domain name if you have enabled tracking of Subdomains in Google Analytics.<br /><a href='http://semperplugins.com/documentation/google-settings/' target='_blank'>Click here for documentation on this setting</a>", 'all_in_one_seo_pack' ),
 			"ga_multi_domain"		=> __( "Check this if you have enabled tracking of Multiple top-level domains in Google Analytics.<br /><a href='http://semperplugins.com/documentation/google-settings/' target='_blank'>Click here for documentation on this setting</a>", 'all_in_one_seo_pack' ),
+			"ga_anonymize_ip"		=> __( "Support for IP Anonymization in Google Analytics.", 'all_in_one_seo_pack' ),	
 			"ga_display_advertising"=> __( "Support for Doubleclick Display Advertising tracking.", 'all_in_one_seo_pack' ),
 			"ga_exclude_users"		=> __( "Exclude logged-in users from Google Analytics tracking by role.", 'all_in_one_seo_pack' ),
 			"ga_track_outbound_links"=> __( "Check this if you want to track outbound links with Google Analytics.<br /><a href='http://semperplugins.com/documentation/google-settings/' target='_blank'>Click here for documentation on this setting</a>", 'all_in_one_seo_pack' ),
@@ -396,6 +397,10 @@ class All_in_One_SEO_Pack extends All_in_One_SEO_Pack_Module {
 				'name' => __( 'Track Multiple Domains:', 'all_in_one_seo_pack' ),
 				'default' => 0,
 				'condshow' => Array( 'aiosp_google_analytics_id' => Array( 'lhs' => 'aiosp_google_analytics_id', 'op' => '!=', 'rhs' => '' ) ) ),
+			"ga_anonymize_ip"=> Array(
+				'name' => __( 'Anonymize IP Addresses:', 'all_in_one_seo_pack' ),
+				'type' => 'checkbox',
+				'condshow' => Array( 'aiosp_google_analytics_id' => Array( 'lhs' => 'aiosp_google_analytics_id', 'op' => '!=', 'rhs' => '' ) ) ),
 			"ga_display_advertising"=> Array(
 				'name' => __( '"Display Advertising" Tracking:', 'all_in_one_seo_pack' ),
 				'type' => 'checkbox',
@@ -487,7 +492,7 @@ class All_in_One_SEO_Pack extends All_in_One_SEO_Pack_Module {
 																										});
 																									});
 																									</script>
-																									<div class="preview_snippet"><div id="aioseop_snippet"><h3><a id="aioseop_snippet_title">%s</a></h3><div><div><cite id="aioseop_snippet_link">%s</cite></div><span id="aioseop_snippet_description">%s</span></div></div></div>' ),
+																									<div class="preview_snippet"><div id="aioseop_snippet"><h3><a>%s</a></h3><div><div><cite id="aioseop_snippet_link">%s</cite></div><span id="aioseop_snippet_description">%s</span></div></div></div>' ),
 																		'title'				 => Array( 'name' => __( 'Title', 'all_in_one_seo_pack' ), 'type' => 'text', 'count' => true, 'size' => 60 ),
 																		'description'		 => Array( 'name' => __( 'Description', 'all_in_one_seo_pack' ), 'type' => 'textarea', 'count' => true, 'cols' => 80, 'rows' => 2 ),
 																		'keywords'			 => Array( 'name' => __( 'Keywords (comma separated)', 'all_in_one_seo_pack' ), 'type' => 'text' ),
@@ -552,7 +557,7 @@ class All_in_One_SEO_Pack extends All_in_One_SEO_Pack_Module {
 						'name' => __( 'Google Settings', 'all_in_one_seo_pack' ),
 						'help_link' => 'http://semperplugins.com/documentation/google-settings/',
 						'options' => Array( "google_publisher", "google_disable_profile", "google_author_advanced", "google_author_location", "google_enable_publisher" , "google_specify_publisher",						
-											"google_connect", "google_analytics_id", "ga_use_universal_analytics", "ga_domain", "ga_multi_domain", "ga_display_advertising", "ga_exclude_users", "ga_track_outbound_links" )
+											"google_connect", "google_analytics_id", "ga_use_universal_analytics", "ga_domain", "ga_multi_domain", "ga_anonymize_ip", "ga_display_advertising", "ga_exclude_users", "ga_track_outbound_links" )
 					),
 				'noindex' => Array(
 						'name' => __( 'Noindex Settings', 'all_in_one_seo_pack' ),
@@ -594,6 +599,7 @@ class All_in_One_SEO_Pack extends All_in_One_SEO_Pack_Module {
 					$wp_query->is_attachment = true;
 				else
 					$wp_query->is_single = true;
+				if ( empty( $wp_query->is_front_page ) ) $wp_query->is_front_page = false;	
 				if 	( get_option( 'show_on_front' ) == 'page' ) {
 					if ( is_page() && $post->ID == get_option( 'page_on_front' ) )
 						$wp_query->is_front_page = true;
@@ -606,20 +612,48 @@ class All_in_One_SEO_Pack extends All_in_One_SEO_Pack_Module {
 				$args['options']['save'] = false;
 				$wp_query->queried_object = $post;
 				
-				$title = $this->wp_title();
-				if ( empty( $title ) ) $title = $post->post_title;
+				if ( !empty( $post ) && !$wp_query->is_home && !$wp_query->is_front_page ) {
+					$title = $this->internationalize( get_post_meta( $post->ID, "_aioseop_title", true ) );
+					if ( empty( $title ) ) $title = $post->post_title;
+				}
+				
+				$title_format = '';
+				if ( empty( $title ) ) {
+					$title = $this->wp_title();
+					$title_format = '%post_title%';
+				}
 				
 				if ( ( $aioseop_options['aiosp_can'] ) && ( $url = $this->aiosp_mrt_get_url( $wp_query ) ) )
 					$url = apply_filters( 'aioseop_canonical_url', $url );
 				if ( !$url ) $url = get_permalink();
 
+				$title = $this->apply_cf_fields( $title );
+
 				$description = $this->get_aioseop_description( $post );
-				$description = apply_filters( 'aioseop_description', $description );
+				$description = $this->apply_cf_fields( $description );
+				$description = apply_filters( 'aioseop_description', $description );				
 				
 				if ( $this->strlen( $title ) > 70 ) $title = $this->trim_excerpt_without_filters( $title, 70 ) . '...';
 				if ( $this->strlen( $description ) > 156 ) $description = $this->trim_excerpt_without_filters( $description, 156 ) . '...';
 				
-				$args['value'] = sprintf( $args['value'], esc_attr( strip_tags( $title ) ), esc_url( $url ), esc_attr( strip_tags( $description ) ) );
+				if ( empty( $title_format ) ) {
+					if ( is_page() )
+						$title_format = $aioseop_options['aiosp_page_title_format'];
+					elseif ( is_single() )
+						$title_format = $this->get_post_title_format();					
+				}
+				if ( empty( $title_format ) ) {
+					$title = '<span id="aioseop_snippet_title">' . esc_attr( strip_tags( $title ) ) . '</span>';
+				} else {
+					$title_format = str_replace( '%blog_title%', get_bloginfo( 'name' ), $title_format );
+					$title_format = $this->apply_cf_fields( $title_format );
+					$title_format = str_replace( '%post_title%', '<span id="aioseop_snippet_title">' . esc_attr( strip_tags( $title ) ) . '</span>', $title_format );
+					$title_format = str_replace( '%page_title%', '<span id="aioseop_snippet_title">' . esc_attr( strip_tags( $title ) ) . '</span>', $title_format );
+					$title_format = preg_replace( '/%([^%]*?)%/', '', $title_format );					
+					$title = $title_format;
+				}
+				
+				$args['value'] = sprintf( $args['value'], $title, esc_url( $url ), esc_attr( strip_tags( $description ) ) );
 				$buf = $this->get_option_row( $args['name'], $args['options'], $args );
 				
 				wp_reset_postdata();
@@ -1257,7 +1291,7 @@ class All_in_One_SEO_Pack extends All_in_One_SEO_Pack_Module {
 				}
 				$meta_string .= sprintf( "<meta name=\"description\" content=\"%s\" />\n", $description );
 			}
-
+			$keywords = $this->apply_cf_fields( $keywords );
 			$keywords = apply_filters( 'aioseop_keywords', $keywords );
 
 			if ( isset( $aioseop_options['aiosp_togglekeywords'] ) )
@@ -1314,7 +1348,7 @@ class All_in_One_SEO_Pack extends All_in_One_SEO_Pack_Module {
 			
 			foreach( Array( 'page_meta', 'post_meta', 'home_meta', 'front_meta' ) as $meta ) {
 				if ( !empty( $aioseop_options["aiosp_{$meta}_tags" ] ) )
-					$$meta = html_entity_decode( stripslashes( $aioseop_options["aiosp_{$meta}_tags" ] ) );
+					$$meta = html_entity_decode( stripslashes( $aioseop_options["aiosp_{$meta}_tags" ] ), ENT_QUOTES );
 				else
 					$$meta = '';
 			}
@@ -1706,9 +1740,13 @@ class All_in_One_SEO_Pack extends All_in_One_SEO_Pack_Module {
 			if ( !empty( $aioseop_options['aiosp_ga_multi_domain'] ) ) {
 				$allow_linker = "'allowLinker': true";
 			}
-			$display_advertising = '';
+			$extra_options = '';
 			if (!empty( $aioseop_options['aiosp_ga_display_advertising'] ) ) {
-				$display_advertising = "ga('require', 'displayfeatures');";
+				$extra_options = "ga('require', 'displayfeatures');";
+			}
+			if ( !empty( $aioseop_options['aiosp_ga_anonymize_ip'] ) ) {
+				if ( !empty( $extra_options ) ) $extra_options .= "\n\t\t\t";
+				$extra_options .= "ga('set', 'anonymizeIp', true);";
 			}
 			$js_options = Array();
 			foreach( Array( 'cookie_domain', 'allow_linker' ) as $opts ) {
@@ -1727,7 +1765,7 @@ class All_in_One_SEO_Pack extends All_in_One_SEO_Pack_Module {
 			})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
 
 			ga('create', '{$analytics_id}'{$js_options});
-			{$display_advertising}
+			{$extra_options}
 			ga('send', 'pageview');
 			</script>
 
@@ -1759,6 +1797,11 @@ function aiosp_google_analytics() {
 		  _gaq.push(['_setAccount', '<?php
 			echo $aioseop_options['aiosp_google_analytics_id'];
 		  ?>']);
+<?php if ( !empty( $aioseop_options['aiosp_ga_anonymize_ip'] ) ) {
+?>		  _gaq.push(['_gat._anonymizeIp']);
+<?php
+}
+?>
 <?php if ( !empty( $aioseop_options['aiosp_ga_multi_domain'] ) ) {
 ?>		  _gaq.push(['_setAllowLinker', true]);
 <?php
@@ -1822,19 +1865,25 @@ function aiosp_google_analytics() {
 			    }
 			  }
 			}
+			
+			function aiosp_addEvent(element, evnt, funct){
+			  if (element.attachEvent)
+			   return element.attachEvent('on'+evnt, funct);
+			  else
+			   return element.addEventListener(evnt, funct, false);
+			}
 
 			aiosp_addLoadEvent(function () {
 				var links = document.getElementsByTagName('a');
 				for (var x=0; x < links.length; x++) {
 					if (typeof links[x] == 'undefined') continue;
-					if (typeof links[x].onclick != 'undefined') continue;
-					links[x].onclick = function () {
+					aiosp_addEvent( links[x], 'onclick', function () {
 						var mydomain = new RegExp(document.domain, 'i');
 						href = getAttr(this, 'href');
-						if(href && href.toLowerCase().indexOf('http') === 0 && !mydomain.test(href)) {
+						if (href && href.toLowerCase().indexOf('http') === 0 && !mydomain.test(href)) {
 							recordOutboundLink(this, 'Outbound Links', href);
 						}
-					}
+					});
 				}
 			});
 		</script>
@@ -1987,14 +2036,14 @@ function aiosp_google_analytics() {
 			$description = $this->get_post_description( $blog_page );
 		if ( empty( $description ) && is_object( $post ) && !is_archive() && empty( $blog_page ) )
 			$description = $this->get_post_description( $post );
+		$description = $this->apply_cf_fields( $description );	
 		return $description;
 	}
 	
 	function replace_title( $content, $title ) {
 		$title = trim( strip_tags( $title ) );
-		$title_tag_start = "<title>";
-		$title_tag_end = "</title>";
-		$len_start = $this->strlen( $title_tag_start );
+		$title_tag_start = "<title";
+		$title_tag_end = "</title";
 		$title = stripslashes( trim( $title ) );
 		$start = $this->strpos( $content, $title_tag_start );
 		$end = $this->strpos( $content, $title_tag_end );
@@ -2003,7 +2052,7 @@ function aiosp_google_analytics() {
 		$this->title_end = $end;
 		$this->orig_title = $title;
 		
-		return preg_replace( '/<title>(.*?)<\/title>/is', '<title>' . preg_replace('/(\$|\\\\)(?=\d)/', '\\\\\1', strip_tags( $title ) ) . '</title>', $content, 1 );
+		return preg_replace( '/<title([^>]*?)\s*>([^<]*?)<\/title\s*>/is', '<title\\1>' . preg_replace('/(\$|\\\\)(?=\d)/', '\\\\\1', strip_tags( $title ) ) . '</title>', $content, 1 );
 	}
 	
 	function internationalize( $in ) {
@@ -2178,7 +2227,7 @@ function aiosp_google_analytics() {
 			$title = $this->internationalize( $post->post_title );
 			if ( !$title )
 				$title = $this->internationalize( $this->get_original_title( '', false ) );
-			$title = get_the_title( $post->post_parent ) . ' ' . $title . ' – ' . get_option( 'blogname' );
+			$title = get_the_title( $post->post_parent ) . ' ' . $title . ' â€“ ' . get_option( 'blogname' );
 			apply_filters( 'aioseop_attachment_title', $title );
 		} else if ( is_page() || $this->is_static_posts_page() || ( is_home() && !$this->is_static_posts_page() ) ) {
 			if ( $post === null ) return false;
@@ -2331,8 +2380,10 @@ function aiosp_google_analytics() {
 		global $aioseop_options;
 		$title = false;
 		$post = $this->get_queried_object();
-		if ( !empty( $aioseop_options['aiosp_rewrite_titles'] ) )
+		if ( !empty( $aioseop_options['aiosp_rewrite_titles'] ) ) {
 			$title = $this->get_aioseop_title( $post );
+			$title = $this->apply_cf_fields( $title );
+		}
 		if ( $title === false )
 			$title = $this->get_original_title();
 		return apply_filters( 'aioseop_title', $title );

@@ -288,6 +288,27 @@ if ( !class_exists( 'All_in_One_SEO_Pack_Module' ) ) {
 		  return $output;
 		}
 		
+		/*** adds support for using %cf_(name of field)% for using custom fields / Advanced Custom Fields in titles / descriptions etc. ***/
+		function apply_cf_fields( $format ) {
+			return preg_replace_callback( '/%cf_([^%]*?)%/', Array( $this, 'cf_field_replace' ), $format );
+		}
+
+		function cf_field_replace( $matches ) {
+			$result = '';
+			if ( !empty( $matches ) ) {
+				if ( !empty( $matches[1] ) ) {
+					if ( function_exists( 'get_field' ) ) $result = get_field( $matches[1] );
+						if ( empty( $result ) ) {
+							global $post;
+							if ( !empty( $post ) ) $result = get_post_meta( $post->ID, $matches[1], true );
+							}
+							if ( empty( $result ) ) $result = $matches[0];
+						} else $result = $matches[0];
+		        }
+				$result = strip_tags( $result );
+		        return $result;
+		}
+		
 		/**
 		 * Returns child blogs of parent in a multisite.
 		 */

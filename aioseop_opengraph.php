@@ -90,6 +90,8 @@ if ( !class_exists( 'All_in_One_SEO_Pack_Opengraph' ) ) {
 				"customimg"				=> __( "This option lets you upload an image to use as the Open Graph image for this Page or Post.<br /><a href='http://semperplugins.com/documentation/social-meta-module/' target='_blank'>Click here for documentation on this setting</a>", 'all_in_one_seo_pack' ),
 				"imagewidth"			=> __( "Enter the width for your Open Graph image in pixels (i.e. 600).<br /><a href='http://semperplugins.com/documentation/social-meta-module/' target='_blank'>Click here for documentation on this setting</a>", 'all_in_one_seo_pack' ),
 				"imageheight"			=> __( "Enter the height for your Open Graph image in pixels (i.e. 600).<br /><a href='http://semperplugins.com/documentation/social-meta-module/' target='_blank'>Click here for documentation on this setting</a>", 'all_in_one_seo_pack' ),
+				"defcard"				=> __( "Select the default type of Twitter card to display.<br /><a href='http://semperplugins.com/documentation/social-meta-module/' target='_blank'>Click here for documentation on this setting</a>", 'all_in_one_seo_pack' ),
+				"setcard"				=> __( "Select the default type of Twitter card to display.<br /><a href='http://semperplugins.com/documentation/social-meta-module/' target='_blank'>Click here for documentation on this setting</a>", 'all_in_one_seo_pack' ),
 				"types"					=> __( "Select which Post Types you want to use All in One SEO Pack to set Open Graph meta values for.<br /><a href='http://semperplugins.com/documentation/social-meta-module/' target='_blank'>Click here for documentation on this setting</a>", 'all_in_one_seo_pack' ),
 				"title"					=> __( "This is the Open Graph title of this Page or Post.<br /><a href='http://semperplugins.com/documentation/social-meta-module/' target='_blank'>Click here for documentation on this setting</a>", 'all_in_one_seo_pack' ),
 				"desc"					=> __( "This is the Open Graph description of this Page or Post.<br /><a href='http://semperplugins.com/documentation/social-meta-module/' target='_blank'>Click here for documentation on this setting</a>", 'all_in_one_seo_pack' ),
@@ -123,6 +125,10 @@ if ( !class_exists( 'All_in_One_SEO_Pack_Opengraph' ) ) {
 											 	'type'			=> 'text', 'default' => '' ),
 					'imageheight'	=> Array(	'name'			=> __( 'Specify Image Height', 'all_in_one_seo_pack' ),
 											 	'type'			=> 'text', 'default' => '' ),
+					'defcard'		=> Array(	'name'			=> __( 'Default Twitter Card', 'all_in_one_seo_pack' ),
+												'type'			=> 'select', 'initial_options' => Array( 'summary' => __( 'Summary', 'all_in_one_seo_pack' ), 'summary_large_image' => __( 'Summary Large Image', 'all_in_one_seo_pack' ), 'photo' => __( 'Photo', 'all_in_one_seo_pack' ) ), 'default' => 'summary' ),
+					'setcard'		=> Array(	'name'			=> __( 'Twitter Card Type', 'all_in_one_seo_pack' ),
+												'type'			=> 'select', 'initial_options' => Array( 'summary' => __( 'Summary', 'all_in_one_seo_pack' ), 'summary_large_image' => __( 'Summary Large Image', 'all_in_one_seo_pack' ), 'photo' => __( 'Photo', 'all_in_one_seo_pack' ) ) ),
 					'types' 		=> Array( 	'name'	  		=> __( 'Enable Facebook Meta for', 'all_in_one_seo_pack'),
 												'type'			=> 'multicheckbox', 'initial_options' => $this->get_post_type_titles( Array( '_builtin' => false ) ),
 												'default'		=> Array( 'post' => 'post', 'page' => 'page' ) ),
@@ -149,10 +155,10 @@ if ( !class_exists( 'All_in_One_SEO_Pack_Opengraph' ) ) {
 
 			$this->locations = array(
 				'opengraph'	=> 	Array( 'name' => $this->name, 'prefix' => 'aiosp_', 'type' => 'settings',
-									   'options' => Array('scan_header', 'setmeta', 'key', 'sitename', 'hometitle', 'description', 'homeimage', 'disable_jetpack', 'generate_descriptions', 'defimg', 'fallback', 'dimg', 'meta_key', 'categories', 'types') ),
+									   'options' => Array('scan_header', 'setmeta', 'key', 'sitename', 'hometitle', 'description', 'homeimage', 'disable_jetpack', 'generate_descriptions', 'defimg', 'fallback', 'dimg', 'meta_key', 'categories', 'defcard', 'types') ),
 				'settings'	=>	Array(	'name'		=> __('Social Settings', 'all_in_one_seo_pack'),
 														  'type'		=> 'metabox', 'help_link' => 'http://semperplugins.com/documentation/social-meta-module/#pagepost_settings',
-														  'options'	=> Array( 'title', 'desc', 'image', 'customimg', 'imagewidth', 'imageheight', 'category' ),
+														  'options'	=> Array( 'title', 'desc', 'image', 'customimg', 'imagewidth', 'imageheight', 'category', 'setcard' ),
 														  'display' => $display, 'prefix' => 'aioseop_opengraph_'
 									)
 			);
@@ -231,6 +237,9 @@ if ( !class_exists( 'All_in_One_SEO_Pack_Opengraph' ) ) {
 					$current_post_type = get_post_type();
 					if ( isset( $this->options["aiosp_opengraph_{$current_post_type}_fb_object_type"] ) ) {
 						$settings[$prefix . 'category']['initial_options'] = array_merge( Array( '' => 'Default - ' . $this->options["aiosp_opengraph_{$current_post_type}_fb_object_type"] ), $settings[$prefix . 'category']['initial_options'] );
+					}
+					if ( isset( $this->options["aiosp_opengraph_defcard"] ) ) {
+						$settings[$prefix . 'setcard']['default'] = $this->options["aiosp_opengraph_defcard"];
 					}
 				}
 				if ( isset( $current[ $prefix . 'setmeta' ] ) && $current[ $prefix . 'setmeta' ] )
@@ -370,7 +379,10 @@ if ( !class_exists( 'All_in_One_SEO_Pack_Opengraph' ) ) {
 			if ( !empty( $description ) )
 				$description = $aiosp->trim_excerpt_without_filters( $aiosp->internationalize( preg_replace( '/\s+/', ' ', $description ) ), 1000 );
 			
-			/* Data Validation */
+			$title = $this->apply_cf_fields( $title );
+			$description = $this->apply_cf_fields( $description );
+			
+			/* Data Validation */			
 			$title = strip_tags( esc_attr( $title ) );
 			$sitename = strip_tags( esc_attr( $sitename ) );
 			$description = strip_tags( esc_attr( $description ) );
@@ -418,6 +430,11 @@ if ( !class_exists( 'All_in_One_SEO_Pack_Opengraph' ) ) {
 			}
 			
 			$card = 'summary';
+			if ( !empty( $this->options['aiosp_opengraph_defcard'] ) )
+				$card = $this->options['aiosp_opengraph_defcard'];
+				
+			if ( !empty( $metabox['aioseop_opengraph_settings_setcard'] ) )
+				$card = $metabox['aioseop_opengraph_settings_setcard'];
 			
 			/* OG only: */
 			$meta = Array(
