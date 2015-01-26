@@ -31,7 +31,7 @@ if ( !class_exists( 'All_in_One_SEO_Pack_Module' ) ) {
 		protected $script_data = null;	// used for passing data to JavaScript
 		protected $plugin_path = null;
 		protected $pointers = Array();
-		protected $form = 'post';
+		protected $form = 'dofollow';
 		
 		/**
 		 * Handles calls to display_settings_page_{$location}, does error checking.
@@ -944,7 +944,7 @@ if ( !class_exists( 'All_in_One_SEO_Pack_Module' ) ) {
 					$ht = $this->help_text[$o];
 				elseif ( !empty( $default_options[$o]["help_text"] ) )
 					$ht = $default_options[$o]["help_text"];
-				if ( $ht ) {
+				if ( $ht && !is_array( $ht ) ) {
 					$ha = '';
 					$hl = $help_link;
 					if ( strpos( $o, 'ga_' ) === 0 ) { // special case -- pdb
@@ -955,8 +955,9 @@ if ( !class_exists( 'All_in_One_SEO_Pack_Module' ) ) {
 						$hl = substr( $hl, 0, $pos );
 					}
 					if ( ( !empty( $ha ) && ( $ha[0] == 'h' ) ) ) $hl = '';
-					if ( !empty( $ha ) || !isset( $this->help_anchors[$o] ) )
-						$ht .= "<br /><a href='" . $hl . $ha . "' target='_blank'>" . __( "Click here for documentation on this setting", 'all_in_one_seo_pack' ) . "</a>";
+					if ( !empty( $ha ) || !isset( $this->help_anchors[$o] ) ) {
+						$ht .= "<br /><a href='" . $hl . $ha . "' target='_blank'>" . __( "Click here for documentation on this setting", 'all_in_one_seo_pack' ) . "</a>";						
+					}
 					$default_options[$o]['help_text'] = $ht;
 				}
 			}
@@ -989,6 +990,7 @@ if ( !class_exists( 'All_in_One_SEO_Pack_Module' ) ) {
 			$prefix = $this->get_prefix();
 			$bail = apply_filters( $prefix . 'bail_on_enqueue', $bail, $screen );
 			if ( $bail ) return;
+			$this->form = 'post';
 			if ( $screen->base == 'edit-tags' ) $this->form = 'edittag';
 			if ( $screen->base == 'toplevel_page_shopp-products' ) $this->form = 'product';
 			$this->form = apply_filters( $prefix . 'set_form_on_enqueue', $this->form, $screen );
@@ -1331,7 +1333,7 @@ if ( !class_exists( 'All_in_One_SEO_Pack_Module' ) ) {
 				else
 					$count_desc = __( ' characters. Most search engines use a maximum of %s chars for the %s.', 'all_in_one_seo_pack' );
 				$buf .= "<br /><input readonly type='text' name='{$prefix}length$n' size='3' maxlength='3' style='width:53px;height:23px;margin:0px;padding:0px 0px 0px 10px;' value='" . $this->strlen($value) . "' />"
-					 . sprintf( $count_desc, $size, $this->strtolower( $options['name'] ) );
+					 . sprintf( $count_desc, $size, trim( $this->strtolower( $options['name'] ), ':' ) );
 				if ( !empty( $onload ) ) $buf .= "<script>jQuery( document ).ready(function() { {$onload} });</script>";
 			}
 			return $buf;

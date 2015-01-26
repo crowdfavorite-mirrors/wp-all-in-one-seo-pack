@@ -196,12 +196,14 @@ class All_in_One_SEO_Pack extends All_in_One_SEO_Pack_Module {
 			"archive_author_noindex"=> 	__( "Check this to ask search engines not to index Author Archives. Useful for avoiding duplicate content.", 'all_in_one_seo_pack' ),
 			"tags_noindex"			=> __( "Check this to ask search engines not to index Tag Archives. Useful for avoiding duplicate content.", 'all_in_one_seo_pack' ),
 			"search_noindex"		=> 	__( "Check this to ask search engines not to index the Search page. Useful for avoiding duplicate content.", 'all_in_one_seo_pack' ),
+			"404_noindex"		=> 	__( "Check this to ask search engines not to index the 404 page.", 'all_in_one_seo_pack' ),
 			"paginated_noindex"		=> 	__( "Check this to ask search engines not to index paginated pages/posts. Useful for avoiding duplicate content.", 'all_in_one_seo_pack' ),
 			"paginated_nofollow"		=> 	__( "Check this to ask search engines not to follow links from paginated pages/posts. Useful for avoiding duplicate content.", 'all_in_one_seo_pack' ),
 			'noodp'			 	 => __( 'Check this box to ask search engines not to use descriptions from the Open Directory Project for your entire site.', 'all_in_one_seo_pack' ),
 			'cpostnoodp'		 => __( "Set the default noodp setting for each Post Type.", 'all_in_one_seo_pack' ),
 			'noydir'			 => __( 'Check this box to ask Yahoo! not to use descriptions from the Yahoo! directory for your entire site.', 'all_in_one_seo_pack' ),
 			'cpostnoydir'		 => __( "Set the default noydir setting for each Post Type.", 'all_in_one_seo_pack' ),
+			"skip_excerpt"		 => __( "Check this and your Meta Descriptions won't be generated from the excerpt.", 'all_in_one_seo_pack' ),
 			"generate_descriptions"	=> __( "Check this and your Meta Descriptions will be auto-generated from your excerpt or content.", 'all_in_one_seo_pack' ),
 			"run_shortcodes"	=> __( "Check this and shortcodes will get executed for descriptions auto-generated from content.", 'all_in_one_seo_pack' ),
 			"hide_paginated_descriptions"=> __( "Check this and your Meta Descriptions will be removed from page 2 or later of paginated content.", 'all_in_one_seo_pack' ),
@@ -305,10 +307,12 @@ class All_in_One_SEO_Pack extends All_in_One_SEO_Pack_Module {
 				       'name' => __( 'I enjoy this plugin and have made a donation:', 'all_in_one_seo_pack' ) ),
 		   "home_title"=> Array( 
 				'name' => __( 'Home Title:', 'all_in_one_seo_pack' ), 
-				'default' => null, 'type' => 'textarea', 'sanitize' => 'text' ),
+				'default' => null, 'type' => 'textarea', 'sanitize' => 'text',
+				'count' => true, 'rows' => 1, 'cols' => 60 ),
 		   "home_description"=> Array( 
 				'name' => __( 'Home Description:', 'all_in_one_seo_pack' ), 
-				'default' => '', 'type' => 'textarea', 'sanitize' => 'text' ),
+				'default' => '', 'type' => 'textarea', 'sanitize' => 'text',
+				'count' => true, 'cols' => 80, 'rows' => 2 ),
 		   "togglekeywords" => Array( 
 				'name' => __( 'Use Keywords:', 'all_in_one_seo_pack' ), 
 				'default' =>  0,
@@ -583,6 +587,9 @@ class All_in_One_SEO_Pack extends All_in_One_SEO_Pack_Module {
 			"search_noindex"=> Array(
 				'name' => __( 'Use noindex for the Search page:', 'all_in_one_seo_pack' ),
 				'default' => 0),
+			"404_noindex"=> Array(
+				'name' => __( 'Use noindex for the 404 page:', 'all_in_one_seo_pack' ),
+				'default' => 0),
 			"paginated_noindex"	=> Array(
 				'name' => __( 'Use noindex for paginated pages/posts:', 'all_in_one_seo_pack' ),
 				'default' => 0),
@@ -595,6 +602,9 @@ class All_in_One_SEO_Pack extends All_in_One_SEO_Pack_Module {
 			"noydir"=> Array(
 				'name' => __( 'Exclude site from Yahoo! Directory:', 'all_in_one_seo_pack' ),
 				'default' => 0),
+			"skip_excerpt"=> Array(
+				'name' => __( 'Avoid Using The Excerpt In Descriptions:', 'all_in_one_seo_pack' ),
+				'default' => 0 ),
 			"generate_descriptions"=> Array(
 				'name' => __( 'Autogenerate Descriptions:', 'all_in_one_seo_pack' ),
 				'default' => 1),
@@ -650,10 +660,10 @@ class All_in_One_SEO_Pack extends All_in_One_SEO_Pack_Module {
 																									<script>
 																									jQuery(document).ready(function() {
 																										jQuery("#aiosp_title_wrapper").bind("input", function() {
-																										    jQuery("#aioseop_snippet_title").text(jQuery("#aiosp_title_wrapper input").val());
+																										    jQuery("#aioseop_snippet_title").text(jQuery("#aiosp_title_wrapper input").val().replace(/<(?:.|\n)*?>/gm, ""));
 																										});
 																										jQuery("#aiosp_description_wrapper").bind("input", function() {
-																										    jQuery("#aioseop_snippet_description").text(jQuery("#aiosp_description_wrapper textarea").val());
+																										    jQuery("#aioseop_snippet_description").text(jQuery("#aiosp_description_wrapper textarea").val().replace(/<(?:.|\n)*?>/gm, ""));
 																										});
 																									});
 																									</script>
@@ -725,12 +735,12 @@ class All_in_One_SEO_Pack extends All_in_One_SEO_Pack_Module {
 				'noindex' => Array(
 						'name' => __( 'Noindex Settings', 'all_in_one_seo_pack' ),
 						'help_link' => 'http://semperplugins.com/documentation/noindex-settings/',
-						'options' => Array( 'cpostnoindex', 'cpostnofollow', 'cpostnoodp', 'cpostnoydir', 'category_noindex', 'archive_date_noindex', 'archive_author_noindex', 'tags_noindex', 'search_noindex', 'paginated_noindex', 'paginated_nofollow', 'noodp', 'noydir' )						
+						'options' => Array( 'cpostnoindex', 'cpostnofollow', 'cpostnoodp', 'cpostnoydir', 'category_noindex', 'archive_date_noindex', 'archive_author_noindex', 'tags_noindex', 'search_noindex', '404_noindex', 'paginated_noindex', 'paginated_nofollow', 'noodp', 'noydir' )						
 					),
 				'advanced' => Array(
 						'name' => __( 'Advanced Settings', 'all_in_one_seo_pack' ),
 						'help_link' => 'http://semperplugins.com/documentation/advanced-settings/',
-						'options' => Array( 'generate_descriptions', 'run_shortcodes', 'hide_paginated_descriptions', 'dont_truncate_descriptions', 'unprotect_meta', 'ex_pages', 'post_meta_tags', 'page_meta_tags', 'front_meta_tags', 'home_meta_tags' )
+						'options' => Array( 'generate_descriptions', 'skip_excerpt', 'run_shortcodes', 'hide_paginated_descriptions', 'dont_truncate_descriptions', 'unprotect_meta', 'ex_pages', 'post_meta_tags', 'page_meta_tags', 'front_meta_tags', 'home_meta_tags' )
 					)
 				);
 
@@ -1559,7 +1569,9 @@ class All_in_One_SEO_Pack extends All_in_One_SEO_Pack_Module {
 		$nofollow = "follow";
 		if ( ( is_category() && !empty( $aioseop_options['aiosp_category_noindex'] ) ) || ( !is_category() && is_archive() && !is_tag() && !is_tax()
 			&& ( ( is_date() && !empty( $aioseop_options['aiosp_archive_date_noindex'] ) ) || ( is_author() && !empty( $aioseop_options['aiosp_archive_author_noindex'] ) ) ) ) 
-			|| ( is_tag() && !empty( $aioseop_options['aiosp_tags_noindex'] ) ) || ( is_search() && !empty( $aioseop_options['aiosp_search_noindex'] ) ) ) {
+			|| ( is_tag() && !empty( $aioseop_options['aiosp_tags_noindex'] ) ) 
+			|| ( is_search() && !empty( $aioseop_options['aiosp_search_noindex'] ) )
+			|| ( is_404() && !empty( $aioseop_options['aiosp_404_noindex'] ) ) ) {
 				$noindex = 'noindex';
 		} elseif ( ( is_single() || is_page() || $this->is_static_posts_page() || is_attachment() || ( $page > 1 ) ) ) {
 			$post_type = get_post_type();
@@ -1607,7 +1619,7 @@ class All_in_One_SEO_Pack extends All_in_One_SEO_Pack_Module {
 		} else if ( is_single() || is_page() || is_attachment() || is_home() || $this->is_static_posts_page() ) {
 			$description = $this->get_aioseop_description( $post );
 		} else if ( ( is_category() || is_tag() || is_tax() ) && $this->show_page_description() ) {
-			if ( !empty( $opts ) ) $description = $opts['aiosp_description'];
+		//	if ( !empty( $opts ) ) $description = $opts['aiosp_description'];
 			if ( empty( $description ) ) $description = term_description();
 			$description = $this->internationalize( $description );
 		}
@@ -2366,7 +2378,8 @@ EOF;
 		
 	    $description = trim( stripslashes( $this->internationalize( get_post_meta( $post->ID, "_aioseop_description", true ) ) ) );
 		if ( !$description ) {
-			$description = $this->trim_excerpt_without_filters_full_length( $this->internationalize( $post->post_excerpt ) );
+			if ( empty( $aioseop_options["aiosp_skip_excerpt"] ) )
+				$description = $this->trim_excerpt_without_filters_full_length( $this->internationalize( $post->post_excerpt ) );
 			if ( !$description && $aioseop_options["aiosp_generate_descriptions"] ) {
 				$content = $post->post_content;
 				if ( !empty( $aioseop_options["aiosp_run_shortcodes"] ) ) $content = do_shortcode( $content );
@@ -2743,7 +2756,9 @@ EOF;
 	            $tag = str_replace('-', ' ', $tag);
 			} else {
 				if ( empty( $tag ) ) $tag = $this->get_original_title( '', false );
+				if ( empty( $tag_description ) ) $tag_description = tag_description();
 				$tag = $this->internationalize( $tag );
+				$tag_description = $this->internationalize( $tag_description );
 			}
 			if ( $tag ) {
 				if ( !empty( $aioseop_options['aiosp_cap_titles'] ) )
@@ -2752,8 +2767,8 @@ EOF;
 	            $title = str_replace( '%blog_title%', $this->internationalize( get_bloginfo('name') ), $title_format );
 	            if ( strpos( $title, '%blog_description%' ) !== false ) $title = str_replace( '%blog_description%', $this->internationalize( get_bloginfo( 'description') ), $title );
 	            if ( strpos( $title, '%tag%'			  ) !== false ) $title = str_replace( '%tag%', $tag, $title );
-		        if ( strpos( $title, '%tag_description%' ) !== false ) $title = str_replace( '%tag_description%', tag_description(), $title );
-		        if ( strpos( $title, '%taxonomy_description%' ) !== false ) $title = str_replace( '%taxonomy_description%', tag_description(), $title );
+		        if ( strpos( $title, '%tag_description%' ) !== false ) $title = str_replace( '%tag_description%', $tag_description, $title );
+		        if ( strpos( $title, '%taxonomy_description%' ) !== false ) $title = str_replace( '%taxonomy_description%', $tag_description, $title );
 				$title = trim( wp_strip_all_tags( $title ) );
 				$title = str_replace( Array( '"', "\r\n", "\n" ), Array( '&quot;', ' ', ' ' ), $title );
 	            $title = $this->paged_title( $title );
@@ -2916,6 +2931,36 @@ EOF;
 		return $traverse;
 	}
 	
+	function get_all_categories( $id = 0 ) {
+		$keywords = Array();
+		$categories = get_the_category( $id ); 
+        foreach ( $categories as $category )
+        	$keywords[] = $this->internationalize( $category->cat_name );
+        return $keywords;
+	}
+	
+	function get_all_tags( $id = 0 ) {
+		$keywords = Array();
+		$tags = get_the_tags( $id );
+        if ( $tags && is_array( $tags) )
+            foreach ( $tags as $tag )
+            	$keywords[] = $this->internationalize( $tag->name );
+		// Ultimate Tag Warrior integration
+        global $utw;
+        if ( $utw ) {
+        	$tags = $utw->GetTagsForPost( $p );
+        	if ( is_array( $tags ) )
+            	foreach ( $tags as $tag ) {
+					$tag = $tag->tag;
+					$tag = str_replace( '_', ' ', $tag );
+					$tag = str_replace( '-', ' ', $tag );
+					$tag = stripslashes( $tag );
+            		$keywords[] = $tag;
+            	}
+        }
+		return $keywords;
+	}
+	
 	/**
 	 * @return comma-separated list of unique keywords
 	 */
@@ -2944,7 +2989,7 @@ EOF;
 	        foreach ( $post_arr as $p ) {
 	            if ( $p ) {
 					$id = $p->ID;
-					if ( $postcount > 1 && !empty( $aioseop_options['aiosp_dynamic_postspage_keywords'] ) ) {
+					if ( $postcount == 1 || !empty( $aioseop_options['aiosp_dynamic_postspage_keywords'] ) ) {
 		                // custom field keywords
 		                $keywords_i = null;           
 		                $keywords_i = stripslashes( $this->internationalize( get_post_meta( $id, "_aioseop_keywords", true ) ) );
@@ -2953,31 +2998,13 @@ EOF;
 							if ( empty( $keywords_i ) )
 								$keywords_i = stripslashes( $this->internationalize( get_post_meta( $id, "_aioseop_keywords", true ) ) );
 						}
-
 						$traverse = $this->keyword_string_to_list( $keywords_i );
 						if ( !empty( $traverse ) )
 							foreach ( $traverse as $keyword ) $keywords[] = $keyword;						
 					}
 					
 					if ( !empty( $aioseop_options['aiosp_use_tags_as_keywords'] ) ) {
-						$tags = get_the_tags( $id );
-		                if ( $tags && is_array( $tags) )
-			                foreach ( $tags as $tag )
-			                	$keywords[] = $this->internationalize( $tag->name );
-						
-						// Ultimate Tag Warrior integration
-		                global $utw;
-		                if ( $utw ) {
-		                	$tags = $utw->GetTagsForPost( $p );
-		                	if ( is_array( $tags ) )
-			                	foreach ( $tags as $tag ) {
-									$tag = $tag->tag;
-									$tag = str_replace( '_', ' ', $tag );
-									$tag = str_replace( '-', ' ', $tag );
-									$tag = stripslashes( $tag );
-			                		$keywords[] = $tag;
-			                	}
-		                }
+						$keywords = array_merge( $keywords, $this->get_all_tags( $id ) );
 					}
 	                // autometa
 					$autometa = stripslashes( get_post_meta( $id, 'autometa', true ) );
@@ -2988,23 +3015,25 @@ EOF;
 	                }
 					
 	            	if ( $aioseop_options['aiosp_use_categories'] && !is_page() ) {
-		                $categories = get_the_category( $id ); 
-		                foreach ( $categories as $category )
-		                	$keywords[] = $this->internationalize( $category->cat_name );
+						$keywords = array_merge( $keywords, $this->get_all_categories( $id ) );
 	            	}
 	            }
 	        }
 	    }
-	    return $this->get_unique_keywords($keywords);
+	    return $this->get_unique_keywords( $keywords );
+	}
+	
+	function clean_keyword_list( $keywords ) {
+		$small_keywords = array();
+		if ( !empty( $keywords ) )
+			foreach ( $keywords as $word ) {
+				$small_keywords[] = trim( $this->strtolower( $word ) );
+			}
+		return array_unique( $small_keywords );
 	}
 	
 	function get_unique_keywords($keywords) {
-		$small_keywords = array();
-		foreach ( $keywords as $word )
-			$small_keywords[] = $this->strtolower( $word );
-
-		$keywords_ar = array_unique( $small_keywords );
-		return implode( ',', $keywords_ar );
+		return implode( ',', $this->clean_keyword_list( $keywords ) );
 	}
 	
 	function log( $message ) {
