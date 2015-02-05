@@ -4,7 +4,7 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=mrtor
 Tags: all in one, all in one seo, all in one seo pack, seo, search engine optimization, google
 Requires at least: 3.3
 Tested up to: 4.1
-Stable tag: 2.2.5
+Stable tag: trunk
 
 All in One SEO Pack is a WordPress SEO plugin to automatically optimize your WordPress blog for Search Engines such as Google.
 

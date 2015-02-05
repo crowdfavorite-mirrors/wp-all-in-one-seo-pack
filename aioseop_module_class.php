@@ -753,9 +753,7 @@ if ( !class_exists( 'All_in_One_SEO_Pack_Module' ) ) {
 					else
 						$wp_query->is_single = true;
 					if 	( get_option( 'show_on_front' ) == 'page' ) {
-						if ( is_page() && $post->ID == get_option( 'page_on_front' ) )
-							$wp_query->is_front_page = true;
-						elseif ( $post->ID == get_option( 'page_for_posts' ) )
+						if ( $post->ID == get_option( 'page_for_posts' ) )
 							$wp_query->is_home = true;
 					}
 					$args['options']['type'] = 'html';

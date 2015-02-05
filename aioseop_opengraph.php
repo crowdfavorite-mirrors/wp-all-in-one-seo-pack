@@ -734,7 +734,7 @@ if ( !class_exists( 'All_in_One_SEO_Pack_Opengraph' ) ) {
 		function type_setup() {
 			global $aiosp, $wp_query;
 			$this->type = '';
-			if ( $wp_query->is_front_page ) {
+			if ( $aiosp->is_static_front_page() ) {
 				if ( !empty( $this->options ) && !empty( $this->options['aiosp_opengraph_categories'] ) )
 					$this->type = $this->options['aiosp_opengraph_categories'];
 			} elseif ( is_singular() && $this->option_isset('types') ) {

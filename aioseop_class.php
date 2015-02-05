@@ -47,6 +47,7 @@ class All_in_One_SEO_Pack extends All_in_One_SEO_Pack_Module {
 	var $account_cache;
 	var $profile_id;
 	var $meta_opts = false;
+	var $is_front_page = null;
  	
 	function All_in_One_SEO_Pack() {
 		global $aioseop_options;
@@ -782,15 +783,15 @@ class All_in_One_SEO_Pack extends All_in_One_SEO_Pack_Module {
 				$wp_query->is_attachment = true;
 			else
 				$wp_query->is_single = true;
-			if ( empty( $wp_query->is_front_page ) ) $wp_query->is_front_page = false;
+			if ( empty( $this->is_front_page ) ) $this->is_front_page = false;
 			if 	( get_option( 'show_on_front' ) == 'page' ) {
 				if ( is_page() && $post->ID == get_option( 'page_on_front' ) )
-					$wp_query->is_front_page = true;
+					$this->is_front_page = true;
 				elseif ( $post->ID == get_option( 'page_for_posts' ) )
 					$wp_query->is_home = true;
 			}
 			$wp_query->queried_object = $post;
-			if ( !empty( $post ) && !$wp_query->is_home && !$wp_query->is_front_page ) {
+			if ( !empty( $post ) && !$wp_query->is_home && !$this->is_front_page ) {
 				$title = $this->internationalize( get_post_meta( $post->ID, "_aioseop_title", true ) );
 				if ( empty( $title ) ) $title = $post->post_title;
 			}
@@ -1408,11 +1409,10 @@ class All_in_One_SEO_Pack extends All_in_One_SEO_Pack_Module {
 	}
 
 	function is_static_front_page() {
-		static $is_front_page = null;
-		if ( $is_front_page !== null ) return $is_front_page;
+		if ( isset( $this->is_front_page ) && $this->is_front_page !== null ) return $this->is_front_page;
 		$post = $this->get_queried_object();
-		$is_front_page = ( get_option( 'show_on_front' ) == 'page' && is_page() && $post->ID == get_option( 'page_on_front' ) );
-		return $is_front_page;
+		$this->is_front_page = ( get_option( 'show_on_front' ) == 'page' && is_page() && $post->ID == get_option( 'page_on_front' ) );
+		return $this->is_front_page;
 	}
 	
 	function is_static_posts_page() {
@@ -3025,6 +3025,7 @@ EOF;
 	
 	function clean_keyword_list( $keywords ) {
 		$small_keywords = array();
+		if ( !is_array( $keywords ) ) $keywords = $this->keyword_string_to_list( $keywords );
 		if ( !empty( $keywords ) )
 			foreach ( $keywords as $word ) {
 				$small_keywords[] = trim( $this->strtolower( $word ) );
