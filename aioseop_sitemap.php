@@ -1507,6 +1507,7 @@ if ( !class_exists( 'All_in_One_SEO_Pack_Sitemap' ) ) {
 							$pr_info[ 'changefreq' ] = $this->options[ $this->prefix . 'freq_post_' . $post->post_type ];
 					}
 					$pr_info['loc'] = $url;
+					if ( is_float( $pr_info['priority'] ) ) $pr_info['priority'] = sprintf( "%0.1F", $pr_info['priority'] );
 					$pr_info = apply_filters( $this->prefix . 'prio_item_filter', $pr_info, $post, $args );
 					if ( !empty( $pr_info ) )
 						$prio[] = $pr_info;

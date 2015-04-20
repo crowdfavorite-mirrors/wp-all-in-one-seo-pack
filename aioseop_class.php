@@ -1573,8 +1573,9 @@ class All_in_One_SEO_Pack extends All_in_One_SEO_Pack_Module {
 			$author = $googleplus;
 		else if ( !empty( $aioseop_options['aiosp_google_publisher'] ) )
 			$author = $aioseop_options['aiosp_google_publisher'];
-			
 		if ( !empty( $aioseop_options['aiosp_google_author_advanced'] ) && isset( $aioseop_options['aiosp_google_author_location'] ) ) {
+			if ( empty( $aioseop_options['aiosp_google_author_location'] ) )
+				$aioseop_options['aiosp_google_author_location'] = Array();
 			if ( is_front_page() && !in_array( 'front', $aioseop_options['aiosp_google_author_location'] ) ) {
 				$author = '';
 			} else {
@@ -3269,17 +3270,15 @@ EOF;
 					unset( $this->pointers[$k] );
 		
 		$this->filter_pointers();
-		
 		if ( !empty( $this->options['aiosp_enablecpost'] ) && $this->options['aiosp_enablecpost'] ) {
-			if ( !empty( $this->options['aiosp_cpostadvanced'] ) ) {
+			if ( !empty( $this->options['aiosp_cpostactive'] ) ) {
 				$this->locations['aiosp']['display'] = $this->options['aiosp_cpostactive'];
 			} else {
-				$this->locations['aiosp']['display'] = get_post_types( '', 'names' );
+				$this->locations['aiosp']['display'] = Array();
 			}
 		} else {
 			$this->locations['aiosp']['display'] = Array( 'post', 'page' );
 		}
-		
 		if ( $custom_menu_order )
 			add_menu_page( $menu_name, $menu_name, 'manage_options', $file, Array( $this, 'display_settings_page' ) );
 		else
@@ -3293,7 +3292,6 @@ EOF;
 		do_action( 'aioseop_modules_add_menus', $file );
 
 		$metaboxes = apply_filters( 'aioseop_add_post_metabox', Array() );
-
 		if ( !empty( $metaboxes ) ) {
 			if ( $this->tabbed_metaboxes ) {
 				$tabs = Array();
