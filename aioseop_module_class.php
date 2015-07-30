@@ -571,8 +571,9 @@ if ( !class_exists( 'All_in_One_SEO_Pack_Module' ) ) {
 		
 		function is_bad_referer() {
 			$referlist = $this->default_bad_referers();
-			$referlist = apply_filters( $this->prefix . "badreferlist", $botlist );
-			if ( !empty( $referlist ) ) {
+			$referlist = apply_filters( $this->prefix . "badreferlist", $referlist );
+
+			if ( !empty( $referlist ) && !empty( $_SERVER ) && !empty( $_SERVER['HTTP_REFERER'] ) ) {
 			    $ref = $_SERVER['HTTP_REFERER'];
 				$regex = $this->quote_list_for_regex( $referlist );
 			    if ( preg_match( '/' . $regex . '/i', $ref ) ) {

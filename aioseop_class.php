@@ -2348,7 +2348,7 @@ EOF;
           "@type": "SearchAction",
           "target": "{$home_url}/?s={search_term}",
           "query-input": "required name=search_term"
-        }
+        },
 EOF;
 		}
 
@@ -2357,11 +2357,11 @@ EOF;
         {
           "@context": "http://schema.org",
           "@type": "WebSite",
-          "url": "{$home_url}/",
 EOF;
 		if ( !empty( $name_block ) )   $search_box .= $name_block;
 		if ( !empty( $search_block ) ) $search_box .= $search_block;
 		$search_box.=<<<EOF
+		  "url": "{$home_url}/"
         }
 </script>
 EOF;

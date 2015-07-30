@@ -80,7 +80,12 @@ if ( !class_exists( 'All_in_One_SEO_Pack_Sitemap' ) ) {
 				 						  'default'	  => 'sitemap', 'type' => 'text', 'sanitize' => 'filename' ),
 					'google'	=> Array( 'name'	  => __( 'Notify Google', 'all_in_one_seo_pack') ),
 					'bing'		=> Array( 'name'	  => __( 'Notify Bing',  'all_in_one_seo_pack') ),
-					'daily_cron'=> Array( 'name'	  => __( 'Schedule Daily Updates', 'all_in_one_seo_pack' ) ),
+					'daily_cron'=> Array( 'name'	  => __( 'Schedule Updates', 'all_in_one_seo_pack' ), 'type' => 'select',
+										   'initial_options' => Array(	0		 => __( 'No Schedule', 'all_in_one_seo_pack' ),
+																		'daily'	 => __( 'Daily', 'all_in_one_seo_pack' ),
+																		'weekly' => __( 'Weekly', 'all_in_one_seo_pack' ),
+																		'monthly'=> __( 'Monthly', 'all_in_one_seo_pack' ) ),
+									  		'default' => 0 ),
 					'indexes'	=> Array( 'name'	  => __( 'Enable Sitemap Indexes', 'all_in_one_seo_pack' ) ),
 					'paginate'	=> Array( 'name'	  => __( 'Paginate Sitemap Indexes', 'all_in_one_seo_pack' ),
 										  'condshow'  => Array( "{$this->prefix}indexes" => 'on' ) ),
@@ -205,9 +210,24 @@ if ( !class_exists( 'All_in_One_SEO_Pack_Sitemap' ) ) {
 			add_action( $this->prefix . 'daily_update_cron', Array( $this, 'daily_update' ) );
 		}
 		
+		// Add new intervals of a week and a month
+		// See http://codex.wordpress.org/Plugin_API/Filter_Reference/cron_schedules
+		function add_cron_schedules( $schedules ) {
+		    $schedules['weekly'] = array(
+		        'interval' => 604800, // 1 week in seconds
+		        'display'  => __( 'Once Weekly', 'all_in_one_seo_pack' )
+		    );
+		    $schedules['monthly'] = array(
+		        'interval' => 2629740, // 1 month in seconds
+		        'display'  => __( 'Once Monthly', 'all_in_one_seo_pack' )
+		    );
+		    return $schedules;
+		}
+		
 		function cron_update() {
+			add_filter( 'cron_schedules', Array( $this, 'add_cron_schedules' ) );
 			if ( !wp_next_scheduled( $this->prefix . 'daily_update_cron' ) )
-		        wp_schedule_event( time(), 'daily', $this->prefix . 'daily_update_cron' );
+		        wp_schedule_event( time(), $this->options[$this->prefix . 'daily_cron'], $this->prefix . 'daily_update_cron' );
 		}
 		
 		function daily_update() {

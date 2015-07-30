@@ -786,6 +786,7 @@ if ( !class_exists( 'All_in_One_SEO_Pack_Opengraph' ) ) {
 						}
 					}
 				}
+			$social_link_schema = '';
 			if ( !empty( $social_links ) ) {
 				$home_url = esc_url( get_home_url() );
 				$social_links = explode( "\n", $social_links );
