@@ -3493,11 +3493,8 @@ EOF;
 				});
 				//]]>
 			</script>
-		<div class="aioseop_advert aioseop_nopad">
-			<a href="https://secure1.inmotionhosting.com/cgi-bin/gby/clickthru.cgi?id=internalsemperfi&page=3000" target="_blank"><img src="<?php echo AIOSEOP_PLUGIN_IMAGES_URL; ?>inmotion.gif"></a>
-		</div>
 		<div class="aioseop_advert aioseop_nopad_all">
-				<?php $adid = mt_rand( 1, 4 ); ?>
+				<?php $adid = mt_rand( 11, 15 ); ?>
 				<a href="https://www.wincher.com/?referer=all-in-one-seo-pack&adreferer=banner<?php echo $adid; ?>" target="_blank"><div class=wincherad id=wincher<?php echo $adid; ?>></div></a>
 		</div>
 		<!-- Headway Themes-->
