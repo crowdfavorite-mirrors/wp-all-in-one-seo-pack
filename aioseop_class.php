@@ -2130,7 +2130,7 @@ class All_in_One_SEO_Pack extends All_in_One_SEO_Pack_Module {
 				$cookie_domain = $this->get_analytics_domain();
 			if ( !empty( $cookie_domain ) ) {
 				$cookie_domain = esc_js( $cookie_domain );
-				$cookie_domain = "'cookieDomain': '{$cookie_domain}'";
+				$cookie_domain = "'{$cookie_domain}'";
 			}
 			if ( empty( $cookie_domain ) ) {
 				$domain = ", 'auto'";
@@ -2179,7 +2179,7 @@ class All_in_One_SEO_Pack extends All_in_One_SEO_Pack_Module {
 			}
 			if ( !empty( $js_options ) ) {
 				$js_options = join( ',', $js_options );
-				$js_options = ', { ' . $js_options . ' } ';
+				$js_options = ', ' . $js_options . ' ';
 			} else $js_options = '';		
 			$analytics_id = esc_js( $aioseop_options["aiosp_google_analytics_id"] );
 			$analytics =<<<EOF
