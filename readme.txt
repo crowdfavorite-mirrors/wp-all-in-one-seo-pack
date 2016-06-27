@@ -4,7 +4,7 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=mrtor
 Tags: seo, all in one seo, google, twitter, page, image seo, social, search engine optimization, sitemap, WordPress SEO, meta, meta description, xml sitemap, google sitemap, sitemaps, robots meta, yahoo, bing, news sitemaps, multisite, canonical, nofollow, noindex, keywords, description, webmaster tools, google webmaster tools, google analytics
 Requires at least: 3.3
 Tested up to: 4.5
-Stable tag: 2.3.4.2
+Stable tag: 2.3.5.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -24,7 +24,7 @@ First created in 2007, see why AIOSEO is the most downloaded plugin for WordPres
 * Google Analytics support
 * Support for SEO on Custom Post Types
 * Advanced Canonical URLs
-* Fine tune Page Navigational Links 
+* Fine tune Page Navigational Links
 * Built-in API so other plugins/themes can access and extend functionality
 * ONLY free plugin to provide SEO Integration for e-Commerce sites, including WooCommerce
 * Nonce Security built into All in One SEO Pack
@@ -55,13 +55,13 @@ manually.
 
 1. Visit 'Plugins > Add New'
 2. Search for 'All in One SEO'
-3. Activate All in One SEO Pack from your Plugins page. 
+3. Activate All in One SEO Pack from your Plugins page.
 
 = From WordPress.org =
 
 1. Download All in One SEO Pack.
 2. Upload the 'All in One SEO Pack' directory to your '/wp-content/plugins/' directory, using your favorite method (ftp, sftp, scp, etc...)
-3. Activate All in One SEO Pack from your Plugins page. 
+3. Activate All in One SEO Pack from your Plugins page.
 
 = Once Activated =
 
@@ -146,7 +146,7 @@ enhancements:
 -futureproofing the file editor function for PHP7,8
 -futureproofing the import-export function for PHP7,8
 
-= 2.2.7.4 = 
+= 2.2.7.4 =
 
 -Update for WordPress 4.4
 -CSS fixes
