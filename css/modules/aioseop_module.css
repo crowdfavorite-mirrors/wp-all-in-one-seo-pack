@@ -501,6 +501,39 @@ div.aioseop_feature {
     -moz-transition-duration: .4s;
 }
 
+.aioseop_feature #free-flag {
+	float: right;
+	margin-right: -7px;
+	background: none repeat scroll 0 0 #D23D46;
+	color: #FFFFFF;
+	padding: 5px 12px 6px 5px;
+	position: relative;
+}
+
+.aioseop_feature #free-flag:before {
+	border-color: #D23D46 #D23D46 #D23D46 transparent;
+	    border-style: solid;
+	    border-width: 14px 4px 15px 10px;
+	    content: "";
+	    left: -14px;
+	    position: absolute;
+	    top: 0;
+}
+
+.aioseop_feature #free-flag:after {
+	border-color: #892026 transparent transparent;
+	    border-style: solid;
+	    border-width: 6px 6px 6px 0;
+	    bottom: -12px;
+	    content: "";
+	    position: absolute;
+	    right: 0;
+}
+
+#aioseop_coming_soon #free-flag {
+	display: none;
+}
+
 .aioseop_feature h3 {
     font-size: 17px;
     margin: 0;
@@ -1154,6 +1187,19 @@ div.aioseop_notice a.aioseop_dismiss_link {
     background-color: rgba(255, 255, 255, 0.5);
     border: 1px solid #ccc;
     color: #5F5F5F;
+}
+
+/* Fix for Chrome */
+@media screen and (-webkit-min-device-pixel-ratio:0) { 
+    
+    .aioseop_header_tabs li a.aioseop_header_tab {
+		padding-bottom: 0;
+    }
+}
+
+/* Fix for Safari */
+_:-webkit-full-screen:not(:root:root), .aioseop_header_tabs li a.aioseop_header_tab { 
+	padding-bottom: 2px; 
 }
 
 .aioseop_header_tabs li:first-child a.aioseop_header_tab {

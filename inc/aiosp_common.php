@@ -52,7 +52,7 @@ class aiosp_common {
 	 *
 	 * @return string
 	 */
-	static function get_upgrade_hyperlink( $location = '', $title = '', $anchor = '', $target = '', $class = '', $id = '' ) {
+	static function get_upgrade_hyperlink( $location = '', $title = '', $anchor = '', $target = '', $class = '', $id = 'aio-pro-update' ) {
 
 		$affiliate_id = '';
 
@@ -76,6 +76,10 @@ class aiosp_common {
 		if ( $title ) {
 			$hyperlink .= "title=\"$title\" ";
 		}
+		if ( $id ) {
+			$hyperlink .= "id=\"$id\" ";
+		}
+
 		$hyperlink .= "href=\"$url\">$anchor</a>";
 
 		return $hyperlink;

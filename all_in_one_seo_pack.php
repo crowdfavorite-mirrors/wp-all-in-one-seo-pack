@@ -3,7 +3,7 @@
 Plugin Name: All In One SEO Pack
 Plugin URI: http://semperfiwebdesign.com
 Description: Out-of-the-box SEO for your WordPress blog. Features like XML Sitemaps, SEO for custom post types, SEO for blogs or business sites, SEO for ecommerce sites, and much more. Almost 30 million downloads since 2007.
-Version: 2.3.5.1
+Version: 2.3.9.1
 Author: Michael Torbert
 Author URI: http://michaeltorbert.com
 Text Domain: all-in-one-seo-pack
@@ -11,12 +11,11 @@ Domain Path: /i18n/
 */
 
 /*
-Copyright (C) 2007-2016 Michael Torbert, semperfiwebdesign.com (michael AT semperfiwebdesign DOT com)
+Copyright (C) 2007-2016 Michael Torbert, https://semperfiwebdesign.com
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
-the Free Software Foundation; either version 3 of the License, or
-(at your option) any later version.
+the Free Software Foundation; version 2 of the License.
 
 This program is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -28,24 +27,25 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 /**
+ * All in One SEO Pack.
+ * The original WordPress SEO plugin.
+ *
  * @package All-in-One-SEO-Pack
- * @version 2.3.5.1
+ * @version 2.3.9.1
  */
 
 if ( ! defined( 'AIOSEOPPRO' ) ) {
 	define( 'AIOSEOPPRO', false );
 }
 if ( ! defined( 'AIOSEOP_VERSION' ) ) {
-	define( 'AIOSEOP_VERSION', '2.3.5.1' );
+	define( 'AIOSEOP_VERSION', '2.3.9.1' );
 }
 global $aioseop_plugin_name;
 $aioseop_plugin_name = 'All in One SEO Pack';
 
-/**********
- *
- * All in One SEO Pack
- *
- *******/
+/*
+ * DO NOT EDIT BELOW THIS LINE.
+ */
 
 if ( ! defined( 'ABSPATH' ) ) {
 	return;
@@ -57,18 +57,33 @@ if ( AIOSEOPPRO ) {
 
 }
 
+if ( ! function_exists( 'aiosp_add_cap' ) ) {
+
+	function aiosp_add_cap() {
+		/*
+		 TODO we should put this into an install script. We just need to make sure it runs soon enough and we need to make
+		 sure people updating from previous versions have access to it.
+		*/
+
+		$role = get_role( 'administrator' );
+		if ( is_object( $role ) ) {
+			$role->add_cap( 'aiosp_manage_seo' );
+		}
+	}
+}
+add_action( 'plugins_loaded', 'aiosp_add_cap' );
+
 if ( ! defined( 'AIOSEOP_PLUGIN_NAME' ) ) {
 	define( 'AIOSEOP_PLUGIN_NAME', $aioseop_plugin_name );
 }
 
-//register_activation_hook(__FILE__,'aioseop_activate_pl');
-
+// Do we need this? register_activation_hook(__FILE__,'aioseop_activate_pl');.
 if ( ! defined( 'AIOSEOP_PLUGIN_DIR' ) ) {
 	define( 'AIOSEOP_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
 } elseif ( AIOSEOP_PLUGIN_DIR !== plugin_dir_path( __FILE__ ) ) {
 
-//this is not a great message
 	/*
+	 This is not a great message.
 		add_action( 'admin_notices', create_function( '', 'echo "' . "<div class='error'>" . sprintf(
 					__( "%s detected a conflict; please deactivate the plugin located in %s.", 'all-in-one-seo-pack' ),
 					$aioseop_plugin_name, AIOSEOP_PLUGIN_DIR ) . "</div>" . '";' ) );
@@ -222,10 +237,10 @@ if ( AIOSEOPPRO ) {
 
 
 if ( ! function_exists( 'aioseop_activate' ) ) {
+
 	function aioseop_activate() {
 
 		//Check if we just got activated.
-
 		global $aiosp_activation;
 		if ( AIOSEOPPRO ) {
 			global $aioseop_update_checker;
@@ -315,7 +330,7 @@ if ( ! function_exists( 'aiosp_add_action_links' ) ) {
 			$action_links['proupgrade'] =
 				array(
 					'label' => __( 'Upgrade to Pro', 'all-in-one-seo-pack' ),
-					'url'   => 'http://semperplugins.com/plugins/all-in-one-seo-pack-pro-version/?loc=plugins'
+					'url'   => 'http://semperplugins.com/plugins/all-in-one-seo-pack-pro-version/?loc=plugins',
 
 				);
 		}
@@ -367,11 +382,11 @@ if ( ! function_exists( 'aioseop_init_class' ) ) {
 		require_once( AIOSEOP_PLUGIN_DIR . 'admin/meta_import.php' );
 		require_once( AIOSEOP_PLUGIN_DIR . 'inc/translations.php' );
 		require_once( AIOSEOP_PLUGIN_DIR . 'public/opengraph.php' );
+		require_once( AIOSEOP_PLUGIN_DIR . 'inc/compatability/compat-init.php');
+		require_once( AIOSEOP_PLUGIN_DIR . 'public/front.php' );
 
 		if ( AIOSEOPPRO ) {
-			require_once( AIOSEOP_PLUGIN_DIR . 'pro/functions_general.php' );
-			require_once( AIOSEOP_PLUGIN_DIR . 'pro/functions_class.php' );
-			require_once( AIOSEOP_PLUGIN_DIR . 'pro/aioseop_pro_updates_class.php' );
+			require_once( AIOSEOP_PLUGIN_DIR . 'pro/class-aio-pro-init.php' ); // Loads pro files and other pro init stuff.
 		}
 		aiosp_seometa_import(); // call importer functions... this should be moved somewhere better
 
@@ -437,7 +452,7 @@ if ( ! function_exists( 'aioseop_scan_post_header' ) ) {
 	}
 }
 
-require_once( AIOSEOP_PLUGIN_DIR . 'aioseop_init.php' );
+require_once( AIOSEOP_PLUGIN_DIR . 'aioseop-init.php' );
 
 if ( ! function_exists( 'aioseop_install' ) ) {
 	register_activation_hook( __FILE__, 'aioseop_install' );

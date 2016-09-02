@@ -1,11 +1,18 @@
 <?php
 /**
- * @package All-in-One-SEO-Pack
- */
-/**
  * The Module Manager.
+ *
+ * Mostly we're activating and deactivating modules/features.
+ *
+ * @package All-in-One-SEO-Pack
+ * @since 2.0
  */
+
 if ( ! class_exists( 'All_in_One_SEO_Pack_Module_Manager' ) ) {
+
+	/**
+	 * Class All_in_One_SEO_Pack_Module_Manager
+	 */
 	class All_in_One_SEO_Pack_Module_Manager {
 		protected $modules = array();
 		protected $settings_update = false;
@@ -13,17 +20,24 @@ if ( ! class_exists( 'All_in_One_SEO_Pack_Module_Manager' ) ) {
 		protected $settings_reset_all = false;
 		protected $module_settings_update = false;
 
-		// initialize module list
+		/**
+		 * All_in_One_SEO_Pack_Module_Manager constructor.
+		 *
+		 * Initialize module list.
+		 *
+		 * @param $mod Modules.
+		 */
 		function __construct( $mod ) {
+
 			$this->modules['feature_manager'] = null;
 			foreach ( $mod as $m ) {
 				$this->modules[ $m ] = null;
 			}
 			$reset     = false;
-			$reset_all = ( isset( $_POST['Submit_All_Default'] ) && $_POST['Submit_All_Default'] !== '' );
-			$reset     = ( ( isset( $_POST['Submit_Default'] ) && $_POST['Submit_Default'] !== '' ) || $reset_all );
+			$reset_all = ( isset( $_POST['Submit_All_Default'] ) && '' !== $_POST['Submit_All_Default'] );
+			$reset     = ( ( isset( $_POST['Submit_Default'] ) && '' !== $_POST['Submit_Default'] ) || $reset_all );
 			$update    = ( isset( $_POST['action'] ) && $_POST['action']
-			               && ( ( isset( $_POST['Submit'] ) && $_POST['Submit'] !== '' ) || $reset )
+			               && ( ( isset( $_POST['Submit'] ) && '' !== $_POST['Submit'] ) || $reset )
 			);
 			if ( $update ) {
 				if ( $reset ) {
@@ -32,26 +46,33 @@ if ( ! class_exists( 'All_in_One_SEO_Pack_Module_Manager' ) ) {
 				if ( $reset_all ) {
 					$this->settings_reset_all = true;
 				}
-				if ( $_POST['action'] === 'aiosp_update' ) {
+				if ( 'aiosp_update' === $_POST['action'] ) {
 					$this->settings_update = true;
 				}
-				if ( $_POST['action'] === 'aiosp_update_module' ) {
+				if ( 'aiosp_update_module' === $_POST['action'] ) {
 					$this->module_settings_update = true;
 				}
 			}
 			$this->do_load_module( 'feature_manager', $mod );
 		}
 
+		/**
+		 * Return module.
+		 *
+		 * @param $class
+		 *
+		 * @return $this|bool|mixed
+		 */
 		function return_module( $class ) {
 			global $aiosp;
-			if ( $class === get_class( $aiosp ) ) {
+			if ( get_class( $aiosp ) === $class ) {
 				return $aiosp;
 			}
-			if ( $class === get_class( $this ) ) {
+			if ( get_class( $aiosp ) === $class ) {
 				return $this;
 			}
 			foreach ( $this->modules as $m ) {
-				if ( is_object( $m ) && ( $class === get_class( $m ) ) ) {
+				if ( is_object( $m ) && ( get_class( $m ) === $class ) ) {
 					return $m;
 				}
 			}
@@ -59,8 +80,11 @@ if ( ! class_exists( 'All_in_One_SEO_Pack_Module_Manager' ) ) {
 			return false;
 		}
 
+		/**
+		 * @return array
+		 */
 		function get_loaded_module_list() {
-			$module_list = Array();
+			$module_list = array();
 			if ( ! empty( $this->modules ) ) {
 				foreach ( $this->modules as $k => $v ) {
 					if ( ! empty( $v ) ) {
@@ -72,13 +96,20 @@ if ( ! class_exists( 'All_in_One_SEO_Pack_Module_Manager' ) ) {
 			return $module_list;
 		}
 
-		// Module name is used for these automatic settings:
-		// The aiosp_enable_$module settings - whether each plugin is active or not
-		// The name of the .php file containing the module - aioseop_$module.php
-		// The name of the class - All_in_One_SEO_Pack_$Module
-		// The global $aioseop_$module
-		// $this->modules[$module]
+		/**
+		 * @param $mod Module.
+		 * @param null $args
+		 *
+		 * @return bool
+		 */
 		function do_load_module( $mod, $args = null ) {
+			// Module name is used for these automatic settings:
+			// The aiosp_enable_$module settings - whether each plugin is active or not.
+			// The name of the .php file containing the module - aioseop_$module.php.
+			// The name of the class - All_in_One_SEO_Pack_$Module.
+			// The global $aioseop_$module.
+			// $this->modules[$module].
+
 			$mod_path = apply_filters( "aioseop_include_$mod", AIOSEOP_PLUGIN_DIR . "modules/aioseop_$mod.php" );
 			if ( ! empty( $mod_path ) ) {
 				require_once( $mod_path );
@@ -92,21 +123,26 @@ if ( ! class_exists( 'All_in_One_SEO_Pack_Module_Manager' ) ) {
 			if ( is_user_logged_in() && function_exists( 'is_admin_bar_showing' ) && is_admin_bar_showing() && current_user_can( 'aiosp_manage_seo' ) ) {
 				add_action( 'admin_bar_menu', array(
 					$module_class,
-					'add_admin_bar_submenu'
+					'add_admin_bar_submenu',
 				), 1001 + $module_class->menu_order() );
 			}
 			if ( is_admin() ) {
-				add_action( 'aioseop_modules_add_menus', Array(
+				add_action( 'aioseop_modules_add_menus', array(
 					$module_class,
-					'add_menu'
+					'add_menu',
 				), $module_class->menu_order() );
-				add_action( 'aiosoep_options_reset', Array( $module_class, 'reset_options' ) );
-				add_filter( 'aioseop_export_settings', Array( $module_class, 'settings_export' ) );
+				add_action( 'aiosoep_options_reset', array( $module_class, 'reset_options' ) );
+				add_filter( 'aioseop_export_settings', array( $module_class, 'settings_export' ) );
 			}
 
 			return true;
 		}
 
+		/**
+		 * @param $mod
+		 *
+		 * @return bool
+		 */
 		function load_module( $mod ) {
 			static $feature_options = null;
 			static $feature_prefix = null;
@@ -114,22 +150,22 @@ if ( ! class_exists( 'All_in_One_SEO_Pack_Module_Manager' ) ) {
 				return false;
 			}
 			$v = $this->modules[ $mod ];
-			if ( $v !== null ) {
+			if ( null !== $v ) {
 				return false;
-			}    // already loaded
-			if ( $mod == 'performance' && ! is_super_admin() ) {
+			}    // Already loaded.
+			if ( 'performance' === $mod && ! is_super_admin() ) {
 				return false;
 			}
-			if ( ( $mod == 'file_editor' || $mod == 'robots' )
-			     && ( ( ( defined( 'DISALLOW_FILE_EDIT' ) && DISALLOW_FILE_EDIT )
-			            || ( defined( 'DISALLOW_FILE_MODS' ) && DISALLOW_FILE_MODS )
-			            || ! is_super_admin() ) )
+			if ( ( 'file_editor' === $mod || 'robots' === $mod )
+			     && ( ( defined( 'DISALLOW_FILE_EDIT' ) && DISALLOW_FILE_EDIT )
+			          || ( defined( 'DISALLOW_FILE_MODS' ) && DISALLOW_FILE_MODS )
+			          || ! is_super_admin() )
 			) {
 				return false;
 			}
 			$mod_enable = false;
 			$fm_page    = ( $this->module_settings_update && wp_verify_nonce( $_POST['nonce-aioseop'], 'aioseop-nonce' ) &&
-			                isset( $_REQUEST['page'] ) && $_REQUEST['page'] == trailingslashit( AIOSEOP_PLUGIN_DIRNAME ) . 'modules/aioseop_feature_manager.php' );
+			                isset( $_REQUEST['page'] ) && trailingslashit( AIOSEOP_PLUGIN_DIRNAME ) . 'modules/aioseop_feature_manager.php' === $_REQUEST['page'] );
 			if ( $fm_page && ! $this->settings_reset ) {
 				if ( isset( $_POST["aiosp_feature_manager_enable_$mod"] ) ) {
 					$mod_enable = $_POST["aiosp_feature_manager_enable_$mod"];
@@ -137,14 +173,14 @@ if ( ! class_exists( 'All_in_One_SEO_Pack_Module_Manager' ) ) {
 					$mod_enable = false;
 				}
 			} else {
-				if ( $feature_prefix == null ) {
+				if ( null === $feature_prefix ) {
 					$feature_prefix = $this->modules['feature_manager']->get_prefix();
 				}
 				if ( $fm_page && $this->settings_reset ) {
 					$feature_options = $this->modules['feature_manager']->default_options();
 				}
-				if ( $feature_options == null ) {
-					if ( $this->module_settings_update && wp_verify_nonce( $_POST['nonce-aioseop'], 'aioseop-nonce' ) && $this->settings_reset_all ) {
+				if ( null === $feature_options ) {
+					if ( $this->module_settings_update && $this->settings_reset_all && wp_verify_nonce( $_POST['nonce-aioseop'], 'aioseop-nonce' ) ) {
 						$feature_options = $this->modules['feature_manager']->default_options();
 					} else {
 						$feature_options = $this->modules['feature_manager']->get_current_options();

@@ -83,11 +83,14 @@ class aiosp_metaboxes {
 						<a target="_blank" title="<?php _e( 'Follow us on Twitter', 'all-in-one-seo-pack' ); ?>"
 						   href="https://twitter.com/aioseopack"><span
 								class="aioseop_follow_button aioseop_twitter_follow"></span></a>
-					</div><?php if ( get_locale() != 'en_US' ) { ?>
+					</div><?php
+
+					$aiosp_trans = new AIOSEOP_Translations();
+					// Eventually if nothing is returned we should just remove this section.
+
+					if ( get_locale() != 'en_US' ) { ?>
 						<div><strong>
 								<?php
-
-								$aiosp_trans = new AIOSEOP_Translations();
 
 								if ( $aiosp_trans->percent_translated < 100 ) {
 

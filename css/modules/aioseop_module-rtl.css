@@ -132,6 +132,20 @@ div.aioseop_feature {
     float: right
 }
 
+.aioseop_feature #free-flag {
+	float: left;
+	margin-right: 0;
+	background: none repeat scroll 0 0 #D23D46;
+	color: #FFFFFF;
+	padding: 5px 12px;
+	position: relative;
+}
+
+.aioseop_feature #free-flag:before,
+.aioseop_feature #free-flag:after {
+	display: none;
+}
+
 .aioseop_feature .feature_button {
     float: left;
     margin-right: 0;

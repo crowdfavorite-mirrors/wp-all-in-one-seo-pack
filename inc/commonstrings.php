@@ -1,22 +1,23 @@
 <?php
-
 /**
  * Class AIOSP_Common_Strings
  *
  * This is just for Pro strings to be translated.
  *
+ * @package All-in-One-SEO-Pack
  */
+
 class AIOSP_Common_Strings {
 
 	/**
 	 * AIOSP_Common_Strings constructor.
 	 *
 	 * We'll just put all the strings in the contruct for lack of a better.
-	 *
 	 */
+
 	private function __construct() {
 
-		//video sitemap strings
+		// Video sitemap strings.
 		__( 'Video Sitemap', 'all-in-one-seo-pack' );
 		__( 'Show Only Posts With Videos', 'all-in-one-seo-pack' );
 		__( 'Scan Posts For Videos', 'all-in-one-seo-pack' );
@@ -27,10 +28,10 @@ class AIOSP_Common_Strings {
 		__( 'You do not have access to this page; try logging in as an administrator.', 'all-in-one-seo-pack' );
 		__( 'Scan', 'all-in-one-seo-pack' );
 
-		//functions_class strings
+		// These are functions_class strings.
 		__( 'Finished scanning posts', 'all-in-one-seo-pack' );
 
-		//update checker strings (incomplete... need to separate out html)
+		// Update checker strings (incomplete... need to separate out html).
 		__( 'Purchase one now', 'all-in-one-seo-pack' );
 		__( 'License Key is not set yet or invalid. ', 'all-in-one-seo-pack' );
 		__( ' Need a license key?', 'all-in-one-seo-pack' );

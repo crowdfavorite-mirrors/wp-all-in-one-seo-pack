@@ -26,23 +26,23 @@ if ( ! class_exists( 'All_in_One_SEO_Pack_Robots' ) ) {
 					'type'    => 'html',
 					'label'   => 'none',
 					'default' => __( 'Use the rule builder below to add rules to create a new Robots.txt file.  If you already have a Robots.txt file you should use the File Editor feature in All in One SEO Pack to edit it or you can delete your current Robots.txt file and start a new one with the rule builder below.', 'all-in-one-seo-pack' ),
-					'save'    => false
+					'save'    => false,
 				),
 				'additional'         => Array(
 					'name'            => __( 'Rule Type', 'all-in-one-seo-pack' ),
 					'save'            => false,
 					'type'            => 'select',
-					'initial_options' => Array( 'allow' => 'Allow', 'block' => 'Block' )
+					'initial_options' => Array( 'allow' => 'Allow', 'block' => 'Block' ),
 				),
 				'useragent'          => Array(
 					'name' => __( 'User Agent', 'all-in-one-seo-pack' ),
 					'save' => false,
-					'type' => 'text'
+					'type' => 'text',
 				),
 				'path'               => Array(
 					'name' => __( 'Directory Path', 'all-in-one-seo-pack' ),
 					'save' => false,
-					'type' => 'text'
+					'type' => 'text',
 				),
 				'robotgen'           => Array(
 					'name'     => __( 'Generate Robots.txt', 'all-in-one-seo-pack' ),
@@ -52,50 +52,50 @@ if ( ! class_exists( 'All_in_One_SEO_Pack_Robots' ) ) {
 					'cols'     => 57,
 					'rows'     => 20,
 					'label'    => 'none',
-					'readonly' => 'readonly'
+					'readonly' => 'readonly',
 				),
 				'Submit_Preview'     => Array(
 					'type'   => 'submit',
 					'class'  => 'button-primary MRL',
 					'name'   => __( 'Add Rule', 'all-in-one-seo-pack' ) . ' &raquo;',
-					'nowrap' => 1
+					'nowrap' => 1,
 				),
 				'Submit_Update'      => Array(
 					'type'   => 'submit',
 					'class'  => 'button-primary',
 					'name'   => __( 'Save Robots.txt File', 'all-in-one-seo-pack' ) . ' &raquo;',
-					'nowrap' => 1
+					'nowrap' => 1,
 				),
 				'Submit_Delete'      => Array(
 					'type'   => 'submit',
 					'class'  => 'button-primary',
 					'name'   => __( 'Delete Robots.txt File', 'all-in-one-seo-pack' ) . ' &raquo;',
-					'nowrap' => 1
+					'nowrap' => 1,
 				),
 				'optusage'           => Array(
 					'type'    => 'html',
 					'label'   => 'none',
 					'default' => __( 'Click the Optimize button below and All in One SEO Pack will analyze your Robots.txt file to make sure it complies with the standards for Robots.txt files.  The results will be displayed in a table below.', 'all-in-one-seo-pack' ),
-					'save'    => false
+					'save'    => false,
 				),
 				'Submit_Opt_Update'  => Array(
 					'type'   => 'submit',
 					'class'  => 'button-primary',
 					'name'   => __( 'Update Robots.txt File', 'all-in-one-seo-pack' ) . ' &raquo;',
 					'nowrap' => 1,
-					'style'  => 'margin-left: 20px;'
+					'style'  => 'margin-left: 20px;',
 				),
 				'Submit_Opt_Preview' => Array(
 					'type'   => 'submit',
 					'class'  => 'button-primary',
 					'name'   => __( 'Disregard Changes', 'all-in-one-seo-pack' ) . ' &raquo;',
-					'nowrap' => 1
+					'nowrap' => 1,
 				),
 				'Submit_Optimize'    => Array(
 					'type'  => 'submit',
 					'class' => 'button-primary',
-					'name'  => __( 'Optimize', 'all-in-one-seo-pack' ) . ' &raquo;'
-				)
+					'name'  => __( 'Optimize', 'all-in-one-seo-pack' ) . ' &raquo;',
+				),
 			);
 
 			if ( ! empty( $help_text ) ) {
@@ -120,8 +120,8 @@ if ( ! class_exists( 'All_in_One_SEO_Pack_Robots' ) ) {
 						'optusage',
 						'Submit_Opt_Update',
 						'Submit_Opt_Preview',
-						'Submit_Optimize'
-					)
+						'Submit_Optimize',
+					),
 				),
 			);
 
@@ -136,20 +136,20 @@ if ( ! class_exists( 'All_in_One_SEO_Pack_Robots' ) ) {
 						'Submit_Preview',
 						'Submit_Update',
 						'Submit_Delete',
-						'robotgen'
+						'robotgen',
 					) // this is set below, to the remaining options -- pdb
-				)
+				),
 			);
 			$this->layout['optimize'] = Array(
 				'name'    => __( 'Optimize your Robots.txt File', 'all-in-one-seo-pack' ),
-				'options' => Array( 'optusage', 'Submit_Optimize' )
+				'options' => Array( 'optusage', 'Submit_Optimize' ),
 			);
 			if ( isset( $_POST['Submit_Optimize'] ) ) {
 				$this->layout['optimize']['options']          = Array(
 					'optusage',
 					'Submit_Opt_Update',
 					'Submit_Opt_Preview',
-					'robothtml'
+					'robothtml',
 				);
 				$this->default_options['optusage']['default'] = __( "Your Robots.txt file has been optimized.  Here are the results and recommendations.  Click the Update Robots.txt File button below to write these changes to your Robots.txt file.  Click the Disregard Changes button to ignore these recommendations and keep your current Robots.txt file.", 'all-in-one-seo-pack' );
 			}
@@ -177,7 +177,7 @@ if ( ! class_exists( 'All_in_One_SEO_Pack_Robots' ) ) {
 							'default' => '',
 							'type'    => 'html',
 							'label'   => 'none',
-							'style'   => 'margin-top:10px;'
+							'style'   => 'margin-top:10px;',
 						);
 					}
 				}
@@ -195,6 +195,28 @@ if ( ! class_exists( 'All_in_One_SEO_Pack_Robots' ) ) {
 			return $submit;
 		}
 
+		/**
+		 * Returns the sitemap filename;
+		 *
+		 * @return bool
+		 */
+		function get_sitemap_filename() {
+
+			global $aioseop_options;
+			if ( isset( $aioseop_options['modules']['aiosp_sitemap_options']['aiosp_sitemap_filename'] ) ) {
+				return $aioseop_options['modules']['aiosp_sitemap_options']['aiosp_sitemap_filename'];
+			}
+
+			return false;
+		}
+
+		/**
+		 * Filters the options.
+		 *
+		 * @todo  Much of this couldn't be considered filtering options, and should be extracted to other functions.
+		 * @since ??
+		 * @since 2.3.6
+		 */
 		function filter_options( $options, $location ) {
 			if ( $location ) {
 				$prefix = $this->get_prefix( $location ) . $location . '_';
@@ -223,7 +245,13 @@ if ( ! class_exists( 'All_in_One_SEO_Pack_Robots' ) ) {
 				}
 				$access = ( get_option( 'blog_public' ) ) ? 'allow' : 'block';
 				if ( $access ) {
-					$allow_rule = "Sitemap: \n\n# global\nUser-agent: *\nDisallow: /xmlrpc.php\n\n";
+					global $aioseop_options;
+					$sitemap_url      = '';
+					$sitemap_filename = $this->get_sitemap_filename();
+					if ( $sitemap_filename ) {
+						$sitemapurl = trailingslashit( get_home_url() ) . $sitemap_filename . '.xml';
+					}
+					$allow_rule = "Sitemap: $sitemapurl \n\n# global\nUser-agent: *\nDisallow: /xmlrpc.php\n\n";
 					$block_rule = "# global\nUser-agent: *\nDisallow: /\n\n";
 					if ( empty( $options[ $prefix . 'robotgen' ] ) ) {
 						$options[ $prefix . 'robotgen' ] = '';
@@ -354,7 +382,7 @@ if ( ! class_exists( 'All_in_One_SEO_Pack_Robots' ) ) {
 							'type'    => 'blank',
 							'content' => $l,
 							'valid'   => true,
-							'strict'  => true
+							'strict'  => true,
 						);
 						$state   = 0;
 					}
@@ -367,7 +395,7 @@ if ( ! class_exists( 'All_in_One_SEO_Pack_Robots' ) ) {
 						'type'    => 'comment',
 						'content' => $l,
 						'valid'   => true,
-						'strict'  => true
+						'strict'  => true,
 					);
 				} elseif ( stripos( $l, 'sitemap' ) === 0 ) {
 					$state   = 2;
@@ -376,7 +404,7 @@ if ( ! class_exists( 'All_in_One_SEO_Pack_Robots' ) ) {
 						'type'    => 'sitemap',
 						'content' => $l,
 						'valid'   => true,
-						'strict'  => false
+						'strict'  => false,
 					);
 				} elseif ( stripos( $l, 'crawl-delay' ) === 0 ) {
 					$state   = 3;
@@ -385,7 +413,7 @@ if ( ! class_exists( 'All_in_One_SEO_Pack_Robots' ) ) {
 						'type'    => 'crawl-delay',
 						'content' => $l,
 						'valid'   => true,
-						'strict'  => false
+						'strict'  => false,
 					);
 				} elseif ( stripos( $l, 'user-agent' ) === 0 ) {
 					$state   = 3;
@@ -394,7 +422,7 @@ if ( ! class_exists( 'All_in_One_SEO_Pack_Robots' ) ) {
 						'type'    => 'user-agent',
 						'content' => $l,
 						'valid'   => true,
-						'strict'  => true
+						'strict'  => true,
 					);
 				} elseif ( stripos( $l, 'useragent' ) === 0 ) {
 					$state   = 3;
@@ -403,7 +431,7 @@ if ( ! class_exists( 'All_in_One_SEO_Pack_Robots' ) ) {
 						'type'    => 'user-agent',
 						'content' => $l,
 						'valid'   => true,
-						'strict'  => false
+						'strict'  => false,
 					);
 				} elseif ( stripos( $l, 'disallow' ) === 0 ) {
 					if ( $state < 3 ) {
@@ -412,7 +440,7 @@ if ( ! class_exists( 'All_in_One_SEO_Pack_Robots' ) ) {
 							'type'    => 'disallow',
 							'content' => $l,
 							'valid'   => false,
-							'strict'  => false
+							'strict'  => false,
 						);
 						continue;
 					}
@@ -422,7 +450,7 @@ if ( ! class_exists( 'All_in_One_SEO_Pack_Robots' ) ) {
 						'type'    => 'disallow',
 						'content' => $l,
 						'valid'   => true,
-						'strict'  => true
+						'strict'  => true,
 					);
 				} elseif ( stripos( $l, 'allow' ) === 0 ) {
 					if ( $state < 3 ) {
@@ -431,7 +459,7 @@ if ( ! class_exists( 'All_in_One_SEO_Pack_Robots' ) ) {
 							'type'    => 'allow',
 							'content' => $l,
 							'valid'   => false,
-							'strict'  => false
+							'strict'  => false,
 						);
 						continue;
 					}
@@ -441,7 +469,7 @@ if ( ! class_exists( 'All_in_One_SEO_Pack_Robots' ) ) {
 						'type'    => 'allow',
 						'content' => $l,
 						'valid'   => true,
-						'strict'  => false
+						'strict'  => false,
 					);
 				} else {
 					$rules[] = Array(
@@ -449,7 +477,7 @@ if ( ! class_exists( 'All_in_One_SEO_Pack_Robots' ) ) {
 						'type'    => 'unknown',
 						'content' => $l,
 						'valid'   => false,
-						'strict'  => false
+						'strict'  => false,
 					);
 				}
 			}

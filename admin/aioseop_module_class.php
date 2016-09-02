@@ -263,7 +263,7 @@ if ( ! class_exists( 'All_in_One_SEO_Pack_Module' ) ) {
 		 * @return array
 		 *
 		 * @author Adrien aka Gaarf & contributors
-		 * @see http://gaarf.info/2009/08/13/xml-string-to-php-array/
+		 * @see    http://gaarf.info/2009/08/13/xml-string-to-php-array/
 		 */
 		function html_string_to_array( $xmlstr ) {
 			if ( ! class_exists( 'DOMDocument' ) ) {
@@ -420,10 +420,13 @@ if ( ! class_exists( 'All_in_One_SEO_Pack_Module' ) ) {
 			$botlist = array(
 				'Yahoo! Slurp' => 'crawl.yahoo.net',
 				'googlebot'    => '.googlebot.com',
-				'msnbot'       => 'search.msn.com'
+				'msnbot'       => 'search.msn.com',
 			);
 			$botlist = apply_filters( $this->prefix . 'botlist', $botlist );
 			if ( ! empty( $botlist ) ) {
+				if ( ! isset( $_SERVER['HTTP_USER_AGENT'] ) ) {
+					return false;
+				}
 				$ua  = $_SERVER['HTTP_USER_AGENT'];
 				$uas = $this->quote_list_for_regex( $botlist );
 				if ( preg_match( '/' . $uas . '/i', $ua ) ) {
@@ -532,7 +535,6 @@ if ( ! class_exists( 'All_in_One_SEO_Pack_Module' ) ) {
 				'RepoMonkey',
 				'RMA',
 				'SemrushBot',
-				'SeznamBot',
 				'SISTRIX',
 				'sitecheck.Internetseer.com',
 				'SiteSnagger',
@@ -586,7 +588,7 @@ if ( ! class_exists( 'All_in_One_SEO_Pack_Module' ) ) {
 				'SemrushBot',
 				'serf',
 				'Unknown',
-				'uptime files'
+				'uptime files',
 			);
 
 			return $botlist;
@@ -596,6 +598,9 @@ if ( ! class_exists( 'All_in_One_SEO_Pack_Module' ) ) {
 			$botlist = $this->default_bad_bots();
 			$botlist = apply_filters( $this->prefix . 'badbotlist', $botlist );
 			if ( ! empty( $botlist ) ) {
+				if ( ! isset( $_SERVER['HTTP_USER_AGENT'] ) ) {
+					return false;
+				}
 				$ua  = $_SERVER['HTTP_USER_AGENT'];
 				$uas = $this->quote_list_for_regex( $botlist );
 				if ( preg_match( '/' . $uas . '/i', $ua ) ) {
@@ -632,7 +637,7 @@ if ( ! class_exists( 'All_in_One_SEO_Pack_Module' ) ) {
 				'best-seo-solution.com',
 				'buy-cheap-online.info',
 				'site3.free-share-buttons.com',
-				'webmaster-traffic.com'
+				'webmaster-traffic.com',
 			);
 
 			return $referlist;
@@ -789,7 +794,7 @@ if ( ! class_exists( 'All_in_One_SEO_Pack_Module' ) ) {
 						$general_settings = true;
 					}
 					if ( $ex == 2 && isset( $_REQUEST['aiosp_importer_exporter_export_post_types'] ) ) {
-							$post_types = $_REQUEST['aiosp_importer_exporter_export_post_types'];
+						$post_types = $_REQUEST['aiosp_importer_exporter_export_post_types'];
 					}
 				}
 			}
@@ -797,7 +802,7 @@ if ( ! class_exists( 'All_in_One_SEO_Pack_Module' ) ) {
 			if ( ( $post_types != null ) && ( $this === $aiosp ) ) {
 				$buf .= $this->post_data_export( '_aioseop', array(
 					'posts_per_page' => - 1,
-					'post_type'      => $post_types
+					'post_type'      => $post_types,
 				) );
 			}
 
@@ -814,12 +819,12 @@ if ( ! class_exists( 'All_in_One_SEO_Pack_Module' ) ) {
 						$value = "'" . str_replace( array( "'", "\n", "\r" ), array(
 								"\'",
 								'\n',
-								'\r'
+								'\r',
 							), trim( serialize( $value ) ) ) . "'";
 					} else {
 						$value = str_replace( array( "\n", "\r" ), array(
 							'\n',
-							'\r'
+							'\r',
 						), trim( var_export( $value, true ) ) );
 					}
 					$buf .= "$key = $value\n";
@@ -1145,14 +1150,14 @@ if ( ! class_exists( 'All_in_One_SEO_Pack_Module' ) ) {
 
 					$meta_key = '';
 					if ( is_array( $options ) && isset( $options['meta_key'] ) ) {
-							$meta_key = $options['meta_key'];
+						$meta_key = $options['meta_key'];
 					}
 
 					if ( ! empty( $meta_key ) && ! empty( $post ) ) {
 						$meta_key = explode( ',', $meta_key );
 						$image    = $this->get_the_image_by_meta_key( array(
 							'post_id'  => $post->ID,
-							'meta_key' => $meta_key
+							'meta_key' => $meta_key,
 						) );
 						if ( ! empty( $image ) ) {
 							$img[] = array( 'type' => 'meta_key', 'id' => $meta_key, 'link' => $image );
@@ -1170,7 +1175,7 @@ if ( ! class_exists( 'All_in_One_SEO_Pack_Module' ) ) {
 						$wp_query->is_single = true;
 					}
 					if ( get_option( 'show_on_front' ) == 'page' && $post->ID == get_option( 'page_for_posts' ) ) {
-							$wp_query->is_home = true;
+						$wp_query->is_home = true;
 					}
 					$args['options']['type']   = 'html';
 					$args['options']['nowrap'] = false;
@@ -1183,7 +1188,7 @@ if ( ! class_exists( 'All_in_One_SEO_Pack_Module' ) ) {
 						'post_type'      => 'attachment',
 						'post_mime_type' => 'image',
 						'order'          => 'ASC',
-						'orderby'        => 'menu_order ID'
+						'orderby'        => 'menu_order ID',
 					) );
 					if ( ! empty( $attachments ) ) {
 						foreach ( $attachments as $id => $attachment ) {
@@ -1235,14 +1240,14 @@ if ( ! class_exists( 'All_in_One_SEO_Pack_Module' ) ) {
 
 			$meta_key = '';
 			if ( is_array( $options ) && isset( $options['meta_key'] ) ) {
-					$meta_key = $options['meta_key'];
+				$meta_key = $options['meta_key'];
 			}
 
 			if ( ! empty( $meta_key ) && ! empty( $post ) ) {
 				$meta_key = explode( ',', $meta_key );
 				$image    = $this->get_the_image_by_meta_key( array(
 					'post_id'  => $post->ID,
-					'meta_key' => $meta_key
+					'meta_key' => $meta_key,
 				) );
 			}
 			if ( empty( $image ) ) {
@@ -1322,11 +1327,11 @@ if ( ! class_exists( 'All_in_One_SEO_Pack_Module' ) ) {
 				'post_type'      => 'attachment',
 				'post_mime_type' => 'image',
 				'order'          => 'ASC',
-				'orderby'        => 'menu_order ID'
+				'orderby'        => 'menu_order ID',
 			) );
 
 			if ( empty( $attachments ) && 'attachment' == get_post_type( $post->ID ) ) {
-					$image = wp_get_attachment_image_src( $post->ID, 'large' );
+				$image = wp_get_attachment_image_src( $post->ID, 'large' );
 			}
 
 			/* If no attachments or image is found, return false. */
@@ -1455,13 +1460,13 @@ if ( ! class_exists( 'All_in_One_SEO_Pack_Module' ) ) {
 			$this->form = apply_filters( $prefix . 'set_form_on_enqueue', $this->form, $screen );
 			foreach ( $this->locations as $k => $v ) {
 				if ( $v['type'] === 'metabox' && isset( $v['display'] ) && ! empty( $v['display'] ) ) {
-						$enqueue_scripts = false;
-						$enqueue_scripts = ( ( ( $screen->base == 'toplevel_page_shopp-products' ) && in_array( 'shopp_product', $v['display'] ) ) ) || in_array( $screen->post_type, $v['display'] );
-						$enqueue_scripts = apply_filters( $prefix . 'enqueue_metabox_scripts', $enqueue_scripts, $screen, $v );
-						if ( $enqueue_scripts ) {
-							add_filter( 'aioseop_localize_script_data', array( $this, 'localize_script_data' ) );
-							add_action( 'admin_print_scripts', array( $this, 'enqueue_scripts' ), 20 );
-							add_action( 'admin_print_scripts', array( $this, 'enqueue_styles' ), 20 );
+					$enqueue_scripts = false;
+					$enqueue_scripts = ( ( ( $screen->base == 'toplevel_page_shopp-products' ) && in_array( 'shopp_product', $v['display'] ) ) ) || in_array( $screen->post_type, $v['display'] );
+					$enqueue_scripts = apply_filters( $prefix . 'enqueue_metabox_scripts', $enqueue_scripts, $screen, $v );
+					if ( $enqueue_scripts ) {
+						add_filter( 'aioseop_localize_script_data', array( $this, 'localize_script_data' ) );
+						add_action( 'admin_print_scripts', array( $this, 'enqueue_scripts' ), 20 );
+						add_action( 'admin_print_scripts', array( $this, 'enqueue_styles' ), 20 );
 					}
 				}
 			}
@@ -1585,7 +1590,7 @@ if ( ! class_exists( 'All_in_One_SEO_Pack_Module' ) ) {
 					'title'  => $name,
 					'id'     => $hookname,
 					'href'   => $url,
-					'order'  => $this->menu_order()
+					'order'  => $this->menu_order(),
 				) );
 			} else {
 				foreach ( $this->locations as $k => $v ) {
@@ -1596,7 +1601,7 @@ if ( ! class_exists( 'All_in_One_SEO_Pack_Module' ) ) {
 								'title'  => $name,
 								'id'     => $hookname,
 								'href'   => $url,
-								'order'  => $this->menu_order()
+								'order'  => $this->menu_order(),
 							) );
 						} else {
 							if ( ! empty( $v['menu_name'] ) ) {
@@ -1609,7 +1614,7 @@ if ( ! class_exists( 'All_in_One_SEO_Pack_Module' ) ) {
 								'title'  => $name,
 								'id'     => $this->get_prefix( $k ) . $k,
 								'href'   => esc_url( admin_url( 'admin.php?page=' . $this->get_prefix( $k ) . $k ) ),
-								'order'  => $this->menu_order()
+								'order'  => $this->menu_order(),
 							) );
 						}
 					}
@@ -1649,7 +1654,7 @@ if ( ! class_exists( 'All_in_One_SEO_Pack_Module' ) ) {
 			if ( $this->locations === null ) {
 				$hookname = add_submenu_page( $parent_slug, $name, $name, apply_filters( 'manage_aiosp', 'aiosp_manage_seo' ), plugin_basename( $this->file ), array(
 					$this,
-					'display_settings_page'
+					'display_settings_page',
 				) );
 				add_action( "load-{$hookname}", array( $this, 'add_page_hooks' ) );
 
@@ -1665,7 +1670,7 @@ if ( ! class_exists( 'All_in_One_SEO_Pack_Module' ) ) {
 						}
 						$hookname = add_submenu_page( $parent_slug, $name, $name, apply_filters( 'manage_aiosp', 'aiosp_manage_seo' ), plugin_basename( $this->file ), array(
 							$this,
-							'display_settings_page'
+							'display_settings_page',
 						) );
 					} else {
 						if ( ! empty( $v['menu_name'] ) ) {
@@ -1675,7 +1680,7 @@ if ( ! class_exists( 'All_in_One_SEO_Pack_Module' ) ) {
 						}
 						$hookname = add_submenu_page( $parent_slug, $name, $name, apply_filters( 'manage_aiosp', 'aiosp_manage_seo' ), $this->get_prefix( $k ) . $k, array(
 							$this,
-							"display_settings_page_$k"
+							"display_settings_page_$k",
 						) );
 					}
 					add_action( "load-{$hookname}", array( $this, 'add_page_hooks' ) );
@@ -1709,7 +1714,7 @@ if ( ! class_exists( 'All_in_One_SEO_Pack_Module' ) ) {
 									'post_type'     => $posttype,
 									'context'       => $v['context'],
 									'priority'      => $v['priority'],
-									'callback_args' => $v
+									'callback_args' => $v,
 								);
 							} else {
 								$title = $v['name'];
@@ -1721,7 +1726,7 @@ if ( ! class_exists( 'All_in_One_SEO_Pack_Module' ) ) {
 								}
 								add_meta_box( $v['prefix'] . $k, $title, array(
 									$this,
-									'display_metabox'
+									'display_metabox',
 								), $posttype, $v['context'], $v['priority'], $v );
 							}
 						}
@@ -1774,7 +1779,7 @@ if ( ! class_exists( 'All_in_One_SEO_Pack_Module' ) ) {
 					'group'     => "\t<b>%s</b><br>\n%s\n",
 					'item'      => "\t<label class='aioseop_option_setting_label'><input type='$type' %s name='%s' value='%s' %s> %s</label>\n",
 					'item_args' => array( 'sel', 'name', 'v', 'attr', 'subopt' ),
-					'selected'  => 'checked '
+					'selected'  => 'checked ',
 				);
 			} else {
 				$strings = array(
@@ -1782,7 +1787,7 @@ if ( ! class_exists( 'All_in_One_SEO_Pack_Module' ) ) {
 					'group'     => "\t<optgroup label='%s'>\n%s\t</optgroup>\n",
 					'item'      => "\t<option %s value='%s'>%s</option>\n",
 					'item_args' => array( 'sel', 'v', 'subopt' ),
-					'selected'  => 'selected '
+					'selected'  => 'selected ',
 				);
 			}
 			$setsel = $strings['selected'];
@@ -1845,7 +1850,7 @@ if ( ! class_exists( 'All_in_One_SEO_Pack_Module' ) ) {
 					'textarea',
 					'text',
 					'submit',
-					'hidden'
+					'hidden',
 				) ) && is_string( $value )
 			) {
 				$value = esc_attr( $value );
@@ -1889,6 +1894,9 @@ if ( ! class_exists( 'All_in_One_SEO_Pack_Module' ) ) {
 					break;
 				case 'html':
 					$buf .= $value;
+					break;
+				case 'esc_html':
+					$buf .= "<pre>" . esc_html( $value ) . "</pre>\n";
 					break;
 				default:
 					$buf .= "<input name='$name' type='{$options['type']}' $attr value='$value'>\n";
@@ -1965,7 +1973,7 @@ if ( ! class_exists( 'All_in_One_SEO_Pack_Module' ) ) {
 				$defaults = $meta_args['args']['default_options'];
 			}
 			if ( ! empty( $meta_args['callback_args'] ) && ! empty( $meta_args['callback_args']['help_link'] ) ) {
-					$help_link = $meta_args['callback_args']['help_link'];
+				$help_link = $meta_args['callback_args']['help_link'];
 			}
 			if ( ! empty( $help_link ) ) {
 				echo "<a class='aioseop_help_text_link aioseop_meta_box_help' target='_blank' href='" . $help_link . "'><span>" . __( 'Help', 'all-in-one-seo-pack' ) . '</span></a>';
@@ -2037,7 +2045,7 @@ if ( ! class_exists( 'All_in_One_SEO_Pack_Module' ) ) {
 					'options' => $opts,
 					'attr'    => $attr,
 					'value'   => $opt,
-					'prefix'  => $prefix
+					'prefix'  => $prefix,
 				);
 				if ( ! empty( $opts['nowrap'] ) ) {
 					echo $this->get_option_html( $args );
@@ -2203,19 +2211,19 @@ if ( ! class_exists( 'All_in_One_SEO_Pack_Module' ) ) {
 							'location'       => array( 'type' => 'hidden', 'value' => $location ),
 							'nonce-aioseop'  => array(
 								'type'  => 'hidden',
-								'value' => wp_create_nonce( 'aioseop-nonce' )
+								'value' => wp_create_nonce( 'aioseop-nonce' ),
 							),
 							'page_options'   => array( 'type' => 'hidden', 'value' => 'aiosp_home_description' ),
 							'Submit'         => array(
 								'type'  => 'submit',
 								'class' => 'button-primary',
-								'value' => __( 'Update Options', 'all-in-one-seo-pack' ) . ' &raquo;'
+								'value' => __( 'Update Options', 'all-in-one-seo-pack' ) . ' &raquo;',
 							),
 							'Submit_Default' => array(
 								'type'  => 'submit',
 								'class' => 'button-secondary',
-								'value' => __( sprintf( 'Reset %s Settings to Defaults', $name ), 'all-in-one-seo-pack' ) . ' &raquo;'
-							)
+								'value' => __( sprintf( 'Reset %s Settings to Defaults', $name ), 'all-in-one-seo-pack' ) . ' &raquo;',
+							),
 						);
 						$submit_options = apply_filters( "{$this->prefix}submit_options", $submit_options, $location );
 						foreach ( $submit_options as $k => $s ) {
@@ -2230,7 +2238,7 @@ if ( ! class_exists( 'All_in_One_SEO_Pack_Module' ) ) {
 								'name'    => $k,
 								'options' => $s,
 								'attr'    => $class,
-								'value'   => $s['value']
+								'value'   => $s['value'],
 							) );
 						}
 						?>
@@ -2249,7 +2257,7 @@ if ( ! class_exists( 'All_in_One_SEO_Pack_Module' ) ) {
 									}
 									add_meta_box( $this->get_prefix( $location ) . $l . '_metabox', $title, array(
 										$this,
-										'display_options'
+										'display_options',
 									),
 										"{$this->prefix}settings", 'advanced', 'default', $lopts );
 								}
@@ -2257,7 +2265,7 @@ if ( ! class_exists( 'All_in_One_SEO_Pack_Module' ) ) {
 						} else {
 							add_meta_box( $this->get_prefix( $location ) . 'metabox', $name, array(
 								$this,
-								'display_options'
+								'display_options',
 							), "{$this->prefix}settings", 'advanced' );
 						}
 						do_meta_boxes( "{$this->prefix}settings", 'advanced', $location );
@@ -2276,7 +2284,7 @@ if ( ! class_exists( 'All_in_One_SEO_Pack_Module' ) ) {
 									'name'    => $k,
 									'options' => $s,
 									'attr'    => $class,
-									'value'   => $s['value']
+									'value'   => $s['value'],
 								) );
 							}
 							?>    </p>
